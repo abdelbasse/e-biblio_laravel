@@ -29,6 +29,6 @@ Route::get('list', function () {
     return view('Users.playlist');
 });
 
-Route::get('/itsNotAViruseDontWorry', function () {
+Route::get('/', function () {
     return view('pranck');
 });
