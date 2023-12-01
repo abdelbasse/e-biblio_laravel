@@ -40,7 +40,7 @@
             <i class='bx m-2 mt-1 mb-1 bx-md bx-right-arrow-alt bx-rotate-180'></i>
         </button>
     </div>
-    <div class="container m-0 p-0 mt-1 justify-content-center mb-5">
+    <div class="container p-0 mt-1 justify-content-center mb-5">
         <div class="container m-3 mb-4 ">
             <h3 style="font-weight: bold;">Title</h3>
         </div>
