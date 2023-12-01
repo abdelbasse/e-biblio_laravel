@@ -22,13 +22,15 @@ Route::get('/log', function () {
     return view('login');
 });
 
-Route::get('count', function () {
+Route::get('/count', function () {
     return view('Users.account');
 });
-Route::get('list', function () {
+
+Route::get('/list', function () {
     return view('Users.playlist');
 });
 
-Route::get('/', function () {
-    return view('pranck');
+Route::get('/history', function () {
+    return view('Users.history');
 });
+
