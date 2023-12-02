@@ -233,13 +233,14 @@
             <li>
                 <div class="profile-details">
                     <div class="profile-content">
-                        <img src="{{ asset('images/Screenshot 2023-11-24 175541.png') }}" alt="profileImg">
+                        <img src="{{ asset(auth()->user()->profile_url) }}" alt="profileImg">
                     </div>
                     <div class="name-job">
-                        <div class="profile_name">Prem Shahi</div>
-                        <div class="job">Web Desginer</div>
+                        <div class="profile_name">{{auth()->user()->name}}</div>
                     </div>
-                    <i class='bx bx-log-out'></i>
+                    <a href="{{route('logout')}}">
+                        <i class='bx bx-log-out'></i>
+                    </a>
                 </div>
             </li>
         </ul>

@@ -157,6 +157,19 @@
         justify-content: center;
     }
 
+
+    #alertsContainer {
+        z-index: 999;
+        max-height: 300px;
+        overflow: hidden;
+        position: fixed;
+        top: 80px;
+        right: 10px;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: flex-end;
+    }
+
     @media screen and (max-width: 767.2px) {
         .form {
             padding: 0px 10px;
@@ -195,13 +208,15 @@
                     <div class="form login">
                         <div class="form-content">
                             <header>Login</header>
-                            <form action="#">
+                            <form action="" method="POST">
+                                @csrf
+                                <input type="text" name="type" value="log" hidden>
                                 <div class="field input-field">
-                                    <input type="email" placeholder="Email" class="input">
+                                    <input type="email" placeholder="Email" class="input" name="email">
                                 </div>
 
                                 <div class="field input-field">
-                                    <input type="password" placeholder="Password" class="password">
+                                    <input type="password" placeholder="Password" class="password" name="password">
                                     <i class='bx bx-hide eye-icon'></i>
                                 </div>
 
@@ -228,17 +243,24 @@
                 <div class="form signup">
                     <div class="form-content">
                         <header>Signup</header>
-                        <form action="#">
+                        <form action="" method="POST">
+                            @csrf
+                            <input type="text" name="type" value="sign" hidden>
                             <div class="field input-field">
-                                <input type="email" placeholder="Email" class="input">
+                                <input type="text" placeholder="Name" class="input" name='name'>
                             </div>
 
                             <div class="field input-field">
-                                <input type="password" placeholder="Create password" class="password">
+                                <input type="email" placeholder="Email" class="input" name='email'>
                             </div>
 
                             <div class="field input-field">
-                                <input type="password" placeholder="Confirm password" class="password">
+                                <input type="password" placeholder="Create password" class="password" name='password'>
+                            </div>
+
+                            <div class="field input-field">
+                                <input type="password" placeholder="Confirm password" class="password"
+                                    name='password_v'>
                                 <i class='bx bx-hide eye-icon'></i>
                             </div>
 
@@ -257,8 +279,26 @@
 
     </div>
 
+    <div id="class_have_errue_message" hidden>
+        @error('Ereur')
+            {!! $message !!}
+        @enderror
+    </div>
+
+    <div id="alertsContainer">
+    </div>
 
 </body>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
 
 <script>
     const forms = document.querySelector(".forms"),
@@ -289,3 +329,46 @@
         })
     })
 </script>
+
+
+<script>
+    setInterval(clearAlertsContainer, 10000);
+
+    function clearAlertsContainer() {
+        // Find the alerts container element
+        var alertsContainer = document.getElementById('alertsContainer');
+
+        // Clear the content of the alerts container
+        alertsContainer.innerHTML = '';
+    }
+</script>
+<script>
+    var alertsContainer = document.getElementById('alertsContainer');
+
+    function showAlertS(message) {
+        alertsContainer.innerHTML += `<div class="alert d-flex justify-content-between alert-success bg-success text-white alert-dismissible" style="opacity:0.65;" role="alert">
+                                            <svg class="bi flex-shrink-0 me-2" role="img" style="width:20px; height:20px;" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+                                    <div>${message}</div>
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>`;
+
+    }
+
+    function showAlertD(message) {
+        alertsContainer.innerHTML += `<div class="alert d-flex justify-content-between alert-danger bg-danger text-white  alert-dismissible" style="opacity:0.65;" role="alert">
+        <svg class="bi flex-shrink-0 me-1" role="img" style="width:20px; height:20px;" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+<div>
+<div>${message}</div>
+<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>`;
+    }
+</script>
+
+
+<script>
+    var errorMessage = document.getElementById('class_have_errue_message').innerHTML;
+    if (errorMessage && errorMessage.trim() !== ""){
+        showAlertD(errorMessage);
+    }
+</script>
+
