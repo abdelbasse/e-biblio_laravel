@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('org_password');
             $table->boolean('is_active')->default(true);
-            $table->boolean('is_account')->default(false);
+            $table->integer('parent_account')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->boolean('is_admin')->default(false);

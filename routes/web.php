@@ -21,9 +21,7 @@ Route::get('/log-out', [AuthController::class,'logout'])->name('logout');
 //check the auth of user before acceing the pages
 Route::middleware('AuthMiddleware')->group(function () {
 
-    Route::get('/book', function () {
-        return view('Users.book');
-    });
+    Route::get('/book/{id}',)->name('book');
 
     Route::get('/', function () {
         return view('Users.book');
@@ -31,6 +29,10 @@ Route::middleware('AuthMiddleware')->group(function () {
 
     Route::get('/count', function () {
         return view('Users.account');
+    });
+
+    Route::get('/profile', function () {
+        return view('Users.profile');
     });
 
     Route::get('/list', function () {

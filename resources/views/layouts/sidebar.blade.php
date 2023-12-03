@@ -377,7 +377,7 @@
             </div>
         </div>
     </section>
-
+    <div id="alertsContainer"></div>
     <script src="{{ asset('js/script.js') }}"></script>
 
 

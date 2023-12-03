@@ -260,7 +260,7 @@
 
                             <div class="field input-field">
                                 <input type="password" placeholder="Confirm password" class="password"
-                                    name='password_v'>
+                                    name='password_confirmation'>
                                 <i class='bx bx-hide eye-icon'></i>
                             </div>
 

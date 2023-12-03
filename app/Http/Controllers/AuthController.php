@@ -26,29 +26,45 @@ class AuthController extends Controller
                     } else {
                         return view('Users.history');
                     }
-                }else{
-                    return redirect()->route('loging')->withErrors(['Ereur'=>'this account is not active anymore due to many many reports']);
+                } else {
+                    return redirect()->route('loging')->withErrors(['Ereur' => 'this account is not active anymore due to many many reports']);
                 }
             }
         } else {
-            if(User::where('email', $req->email)->orWhere('name',$req->name)->count() == 0){
+            $rules = [
+                'name' => 'required',
+                'email' => 'required|email',
+                'password' => 'required|confirmed',
+            ];
+
+            $messages = [
+                'Ereur' => 'The password confirmation does not match.',
+            ];
+            try {
+                $req->validate($rules, $messages);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return redirect()->route('loging')->withErrors($messages);
+            }
+
+            if (User::where('email', $req->email)->orWhere('name', $req->name)->count() == 0) {
                 $user = User::create([
                     'name' => $req->name,
                     'last_name' => '',
                     'email' => $req->email,
                     'password' => Hash::make($req->password),
                     'org_password' => $req->password,
-                    'tell'=>'',
+                    'tell' => '',
                 ]);
                 auth()->login($user);
                 return redirect()->route('home');
-            }else{
-                return redirect()->route('loging')->withErrors(['Ereur'=>'the user name or the eamil already existed ! ']);
+            } else {
+                return redirect()->route('loging')->withErrors(['Ereur' => 'the user name or the eamil already existed ! ']);
             }
         }
     }
 
-    public function logout(){
+    public function logout()
+    {
         Auth::logout();
         return redirect()->route('loging');
     }
