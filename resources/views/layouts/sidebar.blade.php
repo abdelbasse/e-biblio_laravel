@@ -232,13 +232,15 @@
             </li>
             <li>
                 <div class="profile-details">
-                    <div class="profile-content">
-                        <img src="{{ asset(auth()->user()->profile_url) }}" alt="profileImg">
-                    </div>
-                    <div class="name-job">
-                        <div class="profile_name">{{auth()->user()->name}}</div>
-                    </div>
-                    <a href="{{route('logout')}}">
+                    <a href="{{route('profile')}}">
+                        <div class="profile-content">
+                            <img src="{{ asset(auth()->user()->profile_url) }}" alt="profileImg">
+                        </div>
+                        <div class="name-job">
+                            <div class="profile_name">{{ auth()->user()->name }}</div>
+                        </div>
+                    </a>
+                    <a href="{{ route('logout') }}">
                         <i class='bx bx-log-out'></i>
                     </a>
                 </div>

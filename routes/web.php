@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,7 +22,10 @@ Route::get('/log-out', [AuthController::class,'logout'])->name('logout');
 //check the auth of user before acceing the pages
 Route::middleware('AuthMiddleware')->group(function () {
 
-    Route::get('/book/{id}',)->name('book');
+    Route::get('/p',[UserController::class,'page'])->name('profile');
+    Route::post('/p',[UserController::class,'update'])->name('profile_update');
+    Route::post('/p/profile/update',[UserController::class,'profileUpdate'])->name('profile.update');
+    Route::get('/book/{id}',[])->name('book');
 
     Route::get('/', function () {
         return view('Users.book');
@@ -31,9 +35,6 @@ Route::middleware('AuthMiddleware')->group(function () {
         return view('Users.account');
     });
 
-    Route::get('/profile', function () {
-        return view('Users.profile');
-    });
 
     Route::get('/list', function () {
         return view('Users.playlist');

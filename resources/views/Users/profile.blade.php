@@ -63,28 +63,24 @@
                 <form action="" method="POST">
                     @csrf
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Last name</label>
-                                <input type="text" class="form-control" value="{{ auth()->user()->name }}" disabled>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
                                 <label>Name</label>
-                                <input type="text" class="form-control" value="{{ auth()->user()->last_name }}" disabled>
+                                <input type="text" class="form-control" value="{{ auth()->user()->name }}"
+                                    name="name">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Email</label>
-                                <input type="text" class="form-control" value="{{ auth()->user()->email }}" disabled>
+                                <input type="mail" class="form-control" value="{{ auth()->user()->email }}"
+                                    name="email" disabled>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>Tell</label>
-                                <input type="text" class="form-control" name="numTel"
+                                <input type="text" class="form-control" name="tell"
                                     value="{{ auth()->user()->tell }}">
                             </div>
                         </div>
@@ -126,19 +122,17 @@
                 formData.append('_token', '{{ csrf_token() }}');
 
                 $.ajax({
-                    // url: '{ route('Etudiant.profile.update') }',
-
-                    url: '',
+                    url: '{{ route('profile.update') }}',
                     method: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        showAlertS('Action removed successfully');
+                        showAlertS(response.message);
                         location.reload();
                     },
                     error: function(xhr, status, error) {
-                        showAlertD(xhr.responseText);
+                        showAlertD(xhr.error);
                     }
                 });
             });
