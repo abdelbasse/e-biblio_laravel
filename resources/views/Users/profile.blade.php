@@ -60,6 +60,7 @@
         <div class="tab-content p-4 p-md-5" id="v-pills-tabContent">
             <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
                 <h3 class="mb-4">User Info</h3>
+
                 <form action="" method="POST">
                     @csrf
                     <div class="row">
@@ -92,14 +93,20 @@
             </div>
         </div>
     </div>
-    {{--  --}}
-    <div id="alertsContainer"></div>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <div id="class_have_errue_message" hidden>
+        @error('Ereur')
+            {!! $message !!}
+        @enderror
+    </div>
 @endsection
 
 @section('script_2')
+    <script>
+        var errorMessage = document.getElementById('class_have_errue_message').innerHTML;
+        if (errorMessage && errorMessage.trim() !== "") {
+            showAlertD(errorMessage);
+        }
+    </script>
     <script>
         function displaySelectedImage(event) {
             var reader = new FileReader();

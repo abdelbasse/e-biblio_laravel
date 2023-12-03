@@ -19,16 +19,14 @@ class UserController extends Controller
     {
         $user = User::where('id', auth()->user()->id)->first();
 
-        if (User::Where('name', $request->name)->get()->count() <= 1) {
+        if (User::Where('name', $request->name)->count() == 0 || $user->name == $request->name) {
             $user->update([
                 'name' => $request->name,
                 'tell' => $request->tell
             ]);
-            // dd($request);
             return redirect()->route('profile');
         } else {
-
-            return redirect()->route('profile')->withErrors(['Ereur' => 'This name or main already existed!']);
+            return redirect()->route('profile')->withErrors(['Ereur' => 'This name already existed!']);
         }
     }
 

@@ -91,6 +91,19 @@
         font-size: 13px;
         margin-bottom: 0;
     }
+
+
+    #alertsContainer {
+        z-index: 999;
+        max-height: 300px;
+        overflow: hidden;
+        position: fixed;
+        top: 80px;
+        right: 10px;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: flex-end;
+    }
 </style>
 
 <head>
@@ -109,19 +122,6 @@
 </head>
 
 <body>
-    <style>
-        #alertsContainer {
-            z-index: 999;
-            max-height: 300px;
-            overflow: hidden;
-            position: fixed;
-            top: 80px;
-            right: 10px;
-            display: flex;
-            flex-direction: column-reverse;
-            align-items: flex-end;
-        }
-    </style>
     <div class="sidebar close">
         <div class="logo-details ">
             <div style="min-width: 78px; min-height:78px; max-width: 78px; max-height:78px;"
@@ -396,7 +396,6 @@
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
 
-@yield('script_2')
 
 
 
@@ -417,11 +416,11 @@
     function showAlertS(message) {
         alertsContainer.innerHTML += `<div class="alert d-flex justify-content-between alert-success bg-success text-white alert-dismissible" style="opacity:0.65;" role="alert">
                                             <svg class="bi flex-shrink-0 me-2" role="img" style="width:20px; height:20px;" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
-                                    <div>${message}</div>
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>`;
+                                            <div>${message}</div>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>`;
 
-    }
+                                        }
 
     function showAlertD(message) {
         alertsContainer.innerHTML += `<div class="alert d-flex justify-content-between alert-danger bg-danger text-white  alert-dismissible" style="opacity:0.65;" role="alert">
@@ -430,5 +429,7 @@
 <div>${message}</div>
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>`;
-    }
+}
 </script>
+
+@yield('script_2')
