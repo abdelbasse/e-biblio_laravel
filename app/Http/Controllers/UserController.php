@@ -6,27 +6,58 @@ use App\Models\User;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     //
     public function page()
     {
-        return view('Users.profile');
+        $user = User::where('id', auth()->user()->id)->first();
+        $list = $user->accountes;
+        return view('Users.profile')->with(['accounts' => $list]);
     }
 
     public function update(Request $request)
     {
         $user = User::where('id', auth()->user()->id)->first();
+        if (isset($request->type)) {
+            $rules = [
+                'name' => 'required',
+                'email' => 'required|email',
+                'password' => 'required',
+            ];
 
-        if (User::Where('name', $request->name)->count() == 0 || $user->name == $request->name) {
-            $user->update([
-                'name' => $request->name,
-                'tell' => $request->tell
-            ]);
-            return redirect()->route('profile');
+            try {
+                $request->validate($rules);
+            } catch (\Illuminate\Validation\ValidationException $e) {
+                return redirect()->route('profile')->withErrors(['Ereur'=>"input field is empty!"]);
+            }
+
+            if (User::where('name', $request->name)->orWhere('email', $request->email)->count() == 0 ) {
+                User::create([
+                    'name' => $request->name,
+                    'tell' => null,
+                    'last_name' => '',
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'org_password' => $request->password,
+                    'parent_account' => auth()->user()->id,
+                ]);
+                return redirect()->route('profile');
+            } else {
+                return redirect()->route('profile')->withErrors(['Ereur' => 'This name or email already existed!']);
+            }
         } else {
-            return redirect()->route('profile')->withErrors(['Ereur' => 'This name already existed!']);
+            if (User::Where('name', $request->name)->count() == 0 || $user->name == $request->name) {
+                $user->update([
+                    'name' => $request->name,
+                    'tell' => $request->tell
+                ]);
+                return redirect()->route('profile');
+            } else {
+                return redirect()->route('profile')->withErrors(['Ereur' => 'This name already existed!']);
+            }
         }
     }
 

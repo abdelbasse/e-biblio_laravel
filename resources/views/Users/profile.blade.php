@@ -93,6 +93,82 @@
             </div>
         </div>
     </div>
+    <div
+        class=" container-xl container-sm container-md p-0 mt-3 mb-5 d-flex justify-content-center bg-white shadow rounded-lg d-block d-sm-flex">
+        <div class=" row container pt-4">
+            <div class="col-6">
+                <h4 style="font-weight: bold">
+                    Account list
+                </h4>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Create New Account
+                </button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <form action="" method="POST">
+                                <div class="modal-body">
+                                    @csrf
+                                    <input type="text" class="form-control" name="type" value="account" hidden>
+                                    <div class="mb-3">
+                                        <label for="recipient-name" class="col-form-label">Name:</label>
+                                        <input type="text" class="form-control" name="name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="recipient-name" class="col-form-label">Email:</label>
+                                        <input type="email" class="form-control" name="email">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="recipient-name" class="col-form-label">Password:</label>
+                                        <input type="password" class="form-control" name="password">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Close</button>
+                                    <input type="submit" class="btn btn-primary" value="Create">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mt-4">
+                <table class="table table-striped">
+                    <thead>
+                        <tr class="table-dark">
+                            <td class="col-2">Name</td>
+                            <td class="col-5">Email</td>
+                            <td class="col-3"></td>
+                            <td class="col-2">Option</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($accounts as $account)
+                            <tr>
+                                <th>{{ $account->name }}</th>
+                                <td>{{ $account->email }}</td>
+                                <td>
+                                    <a href="/###">
+                                        forget password resent ,via email
+                                    </a>
+                                </td>
+                                <td>delete</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <div id="class_have_errue_message" hidden>
         @error('Ereur')
             {!! $message !!}

@@ -29,7 +29,7 @@ class User extends Authenticatable
         'password',
         'org_password',
         'is_active',
-        'is_account',
+        'parent_account',
         'is_admin',
     ];
 
@@ -55,6 +55,11 @@ class User extends Authenticatable
     public function books()
     {
         return $this->hasMany(Book::class, 'id_account');
+    }
+
+    public function accountes()
+    {
+        return $this->hasMany(User::class, 'parent_account');
     }
 
     public function lists()
