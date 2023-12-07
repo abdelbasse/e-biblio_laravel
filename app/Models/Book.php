@@ -20,7 +20,8 @@ class Book extends Model
         'is_valid',
         'id_list',
         'id_account',
-        'created_at'
+        'created_at',
+        'id_lang'
     ];
 
     public function list(){

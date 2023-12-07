@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -15,17 +16,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/loging', [AuthController::class,'pageLoging'])->name('loging');
-Route::post('/loging', [AuthController::class,'auth_user'])->name('loging_post');
-Route::get('/log-out', [AuthController::class,'logout'])->name('logout');
+Route::get('/loging', [AuthController::class, 'pageLoging'])->name('loging');
+Route::post('/loging', [AuthController::class, 'auth_user'])->name('loging_post');
+Route::get('/log-out', [AuthController::class, 'logout'])->name('logout');
 
 //check the auth of user before acceing the pages
 Route::middleware('AuthMiddleware')->group(function () {
+    //normal user page urls
+    Route::get('/p', [UserController::class, 'page'])->name('profile');
+    Route::post('/p', [UserController::class, 'update'])->name('profile_update');
+    Route::post('/p/profile/update', [UserController::class, 'profileUpdate'])->name('profile.update');
 
-    Route::get('/p',[UserController::class,'page'])->name('profile');
-    Route::post('/p',[UserController::class,'update'])->name('profile_update');
-    Route::post('/p/profile/update',[UserController::class,'profileUpdate'])->name('profile.update');
-    Route::get('/book/{id}',[])->name('book');
+
+    Route::get('/book', function () {
+        return view('Users.book');
+    })->name('book');
 
     Route::get('/', function () {
         return view('Users.book');
@@ -33,14 +38,19 @@ Route::middleware('AuthMiddleware')->group(function () {
 
     Route::get('/count', function () {
         return view('Users.account');
-    });
+    })->name('userAccoint');
 
 
-    Route::get('/list', function () {
-        return view('Users.playlist');
-    });
 
     Route::get('/history', function () {
         return view('Users.history');
+    });
+
+
+    Route::middleware('AccountMiddleware')->group(function () {
+        Route::get('/list', function () {
+            return view('Users.playlist');
+        })->name('list');
+        Route::get('/c/h/',[AccountController::class,'home'])->name('user.accoun.home');
     });
 });
