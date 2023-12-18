@@ -27,4 +27,16 @@ class Book extends Model
     public function list(){
         return $this->belongsTo(ListBook::class, 'id_list');
     }
+
+    //get the categori of a book
+    public function category()
+    {
+        return $this->belongsToMany(Categori::class,'categ_belong_to_book', 'idBook','idCate');
+    }
+
+    //function return the books he read (for user and account)
+    public function readBy()
+    {
+        return $this->belongsToMany(User::class, 'read', 'id_book', 'id_user');
+    }
 }

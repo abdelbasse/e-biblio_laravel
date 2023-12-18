@@ -26,31 +26,13 @@ Route::middleware('AuthMiddleware')->group(function () {
     Route::get('/p', [UserController::class, 'page'])->name('profile');
     Route::post('/p', [UserController::class, 'update'])->name('profile_update');
     Route::post('/p/profile/update', [UserController::class, 'profileUpdate'])->name('profile.update');
-
-
-    Route::get('/book', function () {
-        return view('Users.book');
-    })->name('book');
-
-    Route::get('/', function () {
-        return view('Users.book');
-    })->name('home');
-
-    Route::get('/count', function () {
-        return view('Users.account');
-    })->name('userAccoint');
-
-
-
-    Route::get('/history', function () {
-        return view('Users.history');
-    });
+    //home page
+    Route::get('/h',)->name('user.accoun.home');
 
 
     Route::middleware('AccountMiddleware')->group(function () {
         Route::get('/list', function () {
             return view('Users.playlist');
-        })->name('list');
-        Route::get('/c/h/',[AccountController::class,'home'])->name('user.accoun.home');
+        })->name('count.list');
     });
 });

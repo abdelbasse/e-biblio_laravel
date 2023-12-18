@@ -86,8 +86,63 @@
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            overflow: hidden ;
+            overflow: hidden;
         }
+
+        /* |||||||||||||||||||||||||||||||||||| form book cover input START*/
+        .drag-area {
+            border: 2px dashed #fff;
+            height: 500px;
+            width: 700px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .drag-area.active {
+            border: 2px solid #fff;
+        }
+
+        .drag-area .icon {
+            font-size: 100px;
+            color: #fff;
+        }
+
+        .drag-area header {
+            font-size: 30px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .drag-area span {
+            font-size: 25px;
+            font-weight: 500;
+            color: #fff;
+            margin: 10px 0 15px 0;
+        }
+
+        .drag-area button {
+            padding: 10px 25px;
+            font-size: 20px;
+            font-weight: 500;
+            border: none;
+            outline: none;
+            background: #fff;
+            color: #5256ad;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .drag-area img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        /* |||||||||||||||||||||||||||||||||||| form book cover input END*/
     </style>
 @endsection
 
@@ -151,6 +206,49 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen">
+            Launch demo modal
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalFullscreen" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel"
+            style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-4" id="exampleModalFullscreenLabel">Full screen modal</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="" method="post">
+                            @csrf
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="drag-area">
+                                        <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                        <header>Drag & Drop to Upload File</header>
+                                        <span>OR</span>
+                                        <button>Browse File</button>
+                                        <input type="file" hidden>
+                                    </div>
+                                </div>
+                                <div class="col-6"></div>
+                            </div>
+                        </form>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
         <div class="container mb-5 p-0 m-0 mt-4">
             <div class="other-class-content the-content-part-1">
                 <div class="container m-0 p-0 d-flex flex-wrap">
@@ -306,6 +404,66 @@
             targetContent.forEach(function(content) {
                 content.style.display = 'block';
             });
+        }
+    </script>
+    <script>
+        //selecting all required elements
+        const dropArea = document.querySelector(".drag-area"),
+            dragText = dropArea.querySelector("header"),
+            button = dropArea.querySelector("button"),
+            input = dropArea.querySelector("input");
+        let file; //this is a global variable and we'll use it inside multiple functions
+
+        button.onclick = () => {
+            input.click(); //if user click on the button then the input also clicked
+        }
+
+        input.addEventListener("change", function() {
+            //getting user select file and [0] this means if user select multiple files then we'll select only the first one
+            file = this.files[0];
+            dropArea.classList.add("active");
+            showFile(); //calling function
+        });
+
+
+        //If user Drag File Over DropArea
+        dropArea.addEventListener("dragover", (event) => {
+            event.preventDefault(); //preventing from default behaviour
+            dropArea.classList.add("active");
+            dragText.textContent = "Release to Upload File";
+        });
+
+        //If user leave dragged File from DropArea
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.classList.remove("active");
+            dragText.textContent = "Drag & Drop to Upload File";
+        });
+
+        //If user drop File on DropArea
+        dropArea.addEventListener("drop", (event) => {
+            event.preventDefault(); //preventing from default behaviour
+            //getting user select file and [0] this means if user select multiple files then we'll select only the first one
+            file = event.dataTransfer.files[0];
+            showFile(); //calling function
+        });
+
+        function showFile() {
+            let fileType = file.type; //getting selected file type
+            let validExtensions = ["image/jpeg", "image/jpg", "image/png"]; //adding some valid image extensions in array
+            if (validExtensions.includes(fileType)) { //if user selected file is an image file
+                let fileReader = new FileReader(); //creating new FileReader object
+                fileReader.onload = () => {
+                    let fileURL = fileReader.result; //passing user file source in fileURL variable
+                    // UNCOMMENT THIS BELOW LINE. I GOT AN ERROR WHILE UPLOADING THIS POST SO I COMMENTED IT
+                    // let imgTag = `<img src="${fileURL}" alt="image">`; //creating an img tag and passing user selected file source inside src attribute
+                    dropArea.innerHTML = imgTag; //adding that created img tag inside dropArea container
+                }
+                fileReader.readAsDataURL(file);
+            } else {
+                alert("This is not an Image File!");
+                dropArea.classList.remove("active");
+                dragText.textContent = "Drag & Drop to Upload File";
+            }
         }
     </script>
 @endsection

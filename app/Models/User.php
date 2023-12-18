@@ -52,6 +52,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // the books he post it (for account)
     public function books()
     {
         return $this->hasMany(Book::class, 'id_account');
@@ -65,5 +66,11 @@ class User extends Authenticatable
     public function lists()
     {
         return $this->hasMany(ListBook::class, 'id_account');
+    }
+
+    //function return the books he read (for user and account)
+    public function read()
+    {
+        return $this->belongsToMany(Book::class, 'read', 'id_user', 'id_book');
     }
 }
