@@ -27,7 +27,7 @@ Route::middleware('AuthMiddleware')->group(function () {
     Route::post('/p', [UserController::class, 'update'])->name('profile_update');
     Route::post('/p/profile/update', [UserController::class, 'profileUpdate'])->name('profile.update');
     //home page
-    Route::get('/h',)->name('user.accoun.home');
+    Route::get('/h',function(){return view('home');})->name('user.accoun.home');
 
 
     Route::middleware('AccountMiddleware')->group(function () {
