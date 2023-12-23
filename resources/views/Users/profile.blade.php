@@ -30,6 +30,15 @@
         .nav-pills a.nav-link i {
             width: 20px;
         }
+
+        .profile-image {
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-color: rgb(222, 222, 222);
+            border-radius: 20px;
+            height: 200px;
+        }
     </style>
     <div class="container-xl container-sm  container-md p-0 pt-5 pb-3">
         <div class="row">
@@ -40,68 +49,87 @@
             <div class="col-12 col-md-6 d-flex justify-content-end">
                 <div>
                     @if (auth()->user()->parent_account)
-                        <a href="{{route('user.accoun.home')}}" class="btn btn-secondary">Vue Account</a>
+                        <a href="{{ route('user.accoun.home') }}" class="btn btn-secondary">Vue Account</a>
                     @endif
                 </div>
             </div>
         </div>
     </div>
-    <div class=" container-xl container-sm container-md p-0 mt-3 mb-5 bg-white shadow rounded-lg d-block d-sm-flex">
-        <div class="profile-tab-nav border-right">
-            <div class="p-4">
-                <h4 class="text-center">{{ auth()->user()->name }} {{ auth()->user()->last_name }}</h4>
-                <div class="row">
-                    <div class="col-sm-12 d-flex justify-content-center mb-4">
-                        <div class="shadow rounded">
-                            <img id="previewImage" src="{{ asset(auth()->user()->profile_url) }}"
-                                class="border rounded img-fluid" width="200px" alt="">
-                        </div>
+    <div class=" container-xl container-sm container-md p-0 mt-3 mb-5 bg-white shadow rounded-lg">
+        @if (auth()->user()->parent_account)
+            <div class="col-12 mt-3">
+                <div class="col-12 p-5 pb-2">
+                    <div class="profile-image"
+                        style="background-image: url('{{ asset(auth()->user()->background_account) }}');">
                     </div>
-                    <div class="col-sm-6 d-flex flex-column">
-                        <div class="mt-auto">
-                            <label for="imageInput" class="btn btn-primary btn-block rounded-3">
-                                change profiel
-                                <input type="file" name="image" id="imageInput" class="d-none"
-                                    onchange="displaySelectedImage(event)">
-                            </label>
+                </div>
+            </div>
+        @endif
+        <div class=" p-0 mt-0 mb-5  d-block d-sm-flex">
+            <div class="profile-tab-nav border-right">
+                <div class="p-4">
+                    <h4 class="text-center">{{ auth()->user()->name }} {{ auth()->user()->last_name }}</h4>
+                    <div class="row">
+                        <div class="col-sm-12 d-flex justify-content-center mb-4">
+                            <div class="shadow rounded">
+                                <img id="previewImage" src="{{ asset(auth()->user()->profile_url) }}"
+                                    class="border rounded img-fluid" width="200px" alt="">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 d-flex flex-column">
+                            <div class="mt-auto">
+                                <label for="imageInput" class="btn btn-primary btn-block rounded-3">
+                                    Change Profile
+                                    <input type="file" name="image" id="imageInput" class="d-none"
+                                        onchange="displaySelectedImage(event)">
+                                </label>
+                            </div>
+                            <!-- Add similar input for background profile image -->
+                            <div class="mt-3">
+                                <label for="backgroundImageInput" class="btn btn-primary btn-block rounded-3">
+                                    Change Background Profile
+                                    <input type="file" name="backgroundImage" id="backgroundImageInput" class="d-none"
+                                        onchange="displaySelectedBackgroundImage(event)">
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="tab-content p-4 p-md-5" id="v-pills-tabContent">
-            <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
-                <h3 class="mb-4">User Info</h3>
+            <div class="tab-content p-4 p-md-5" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
+                    <h3 class="mb-4">User Info</h3>
 
-                <form action="" method="POST">
-                    @csrf
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Name</label>
-                                <input type="text" class="form-control" value="{{ auth()->user()->name }}"
-                                    name="name">
+                    <form action="" method="POST">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Name</label>
+                                    <input type="text" class="form-control" value="{{ auth()->user()->name }}"
+                                        name="name">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="mail" class="form-control" value="{{ auth()->user()->email }}"
+                                        name="email" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Tell</label>
+                                    <input type="text" class="form-control" name="tell"
+                                        value="{{ auth()->user()->tell }}">
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="mail" class="form-control" value="{{ auth()->user()->email }}"
-                                    name="email" disabled>
-                            </div>
+                        <div>
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Tell</label>
-                                <input type="text" class="form-control" name="tell"
-                                    value="{{ auth()->user()->tell }}">
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -208,31 +236,62 @@
         }
     </script>
     <script>
-        $(document).ready(function() {
-            $(document).on('change', '#imageInput', function(event) {
-                displaySelectedImage(event);
-
-                var file = event.target.files[0];
-                var formData = new FormData();
-                formData.append('file', file);
-                formData.append('isUpdateImage', 'ko');
-                formData.append('_token', '{{ csrf_token() }}');
-
-                $.ajax({
-                    url: '{{ route('profile.update') }}',
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        showAlertS(response.message);
-                        location.reload();
-                    },
-                    error: function(xhr, status, error) {
-                        showAlertD(xhr.error);
-                    }
-                });
-            });
-        });
+        function displaySelectedBackgroundImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('previewBackgroundImage');
+                output.style.backgroundImage = 'url(' + reader.result + ')';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
     </script>
+    <script>
+    $(document).ready(function() {
+        $(document).on('change', '#imageInput', function(event) {
+            displaySelectedImage(event);
+            updateProfile('ko');
+        });
+
+        $(document).on('change', '#backgroundImageInput', function(event) {
+            displaySelectedBackgroundImage(event);
+            updateProfile('ok');
+        });
+
+        function updateProfile(isUpdateImage) {
+            var file;
+            var formData;
+            var type;
+            if (isUpdateImage === 'ko') {
+                file = $('#imageInput')[0].files[0];
+                formData = new FormData();
+                formData.append('file', file);
+                type = "p";
+            } else if (isUpdateImage === 'ok') {
+                file = $('#backgroundImageInput')[0].files[0];
+                formData = new FormData();
+                formData.append('backgroundFile', file);
+                type = "bg";
+            }
+
+            formData.append('type', type);
+            formData.append('_token', '{{ csrf_token() }}');
+
+            $.ajax({
+                url: '{{ route('profile.update') }}',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    showAlertS(response.message);
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    showAlertD(xhr.error);
+                }
+            });
+        }
+    });
+</script>
+
 @endsection

@@ -142,7 +142,68 @@
             border-radius: 5px;
         }
 
+        .categori {
+            color: white;
+            cursor: pointer;
+            border-radius: 100px !important;
+            background: #545454;
+        }
+
         /* |||||||||||||||||||||||||||||||||||| form book cover input END*/
+    </style>
+    <style>
+        .multiselect {
+            width: 100%;
+            position: relative;
+            display: inline-block;
+        }
+
+        .select-box {
+            padding: 8px;
+            margin: 10px;
+            border: 1px solid #ced4da;
+            cursor: pointer;
+        }
+
+        .tag-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            z-index: 1;
+            background-color: #fff;
+            border: 1px solid #ced4da;
+            overflow: auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #ced4da;
+        }
+
+        .tag-list li {
+            padding: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tag-list li:hover {
+            background-color: #f0f0f0;
+        }
+
+        .selected-tags {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
     </style>
 @endsection
 
@@ -150,7 +211,7 @@
     <div class="container mt-5">
         <div class="row mb-3">
             <div class="col-12">
-                <div class="profile-image" style="background-image: url('{{ asset('images/backgroundProfile.png') }}');">
+                <div class="profile-image" style="background-image: url('{{ asset(auth()->user()->background_account) }}');">
                 </div>
             </div>
             <div class="row col-12 mt-3 ">
@@ -219,23 +280,78 @@
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-4" id="exampleModalFullscreenLabel">Full screen modal</h1>
+                        <h1 class="modal-title fs-4" id="exampleModalFullscreenLabel"></h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form action="" method="post">
                             @csrf
+                            <!-- Two-column layout (5,7) -->
                             <div class="row">
-                                <div class="col-6">
-                                    <div class="drag-area">
-                                        <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                                        <header>Drag & Drop to Upload File</header>
-                                        <span>OR</span>
-                                        <button>Browse File</button>
-                                        <input type="file" hidden>
+                                <!-- Left Column (5) -->
+                                <div class="col-md-5">
+                                    <label for="bookCoverInput">Book Cover</label>
+                                    <input type="file" class="form-control" id="bookCoverInput"
+                                        onchange="previewImage(this)">
+                                    <div >
+                                        <div class="image-book-container d-flex mt-3 justify-content-center " >
+                                            <div id="imagePreview" style=" max-width: 200px;">
+                                                <img src="{{ asset('images/default book.jpg') }}" class=" product-thumb"
+                                                    style="box-shadow: -30px 30px 20px 0 rgba(0, 0, 0, 0.2); border-radius:10px; " width="100%"
+                                                    alt="">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-6"></div>
+
+                                <!-- Right Column (7) -->
+                                <div class="col-md-7">
+                                    <label for="pdfInput">PDF File</label>
+                                    <input type="file" class="form-control" id="pdfInput"
+                                        onchange="showFileDesign(this)">
+                                    <div id="fileDesign" style="display: none;">
+                                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                            <strong id="selectedFileName"></strong>
+                                            <button type="button" class="btn-close" onclick="removeFileDesign()"
+                                                aria-label="Close"></button>
+                                        </div>
+                                    </div>
+
+                                    <label for="textInput" class="mt-2">Text</label>
+                                    <input type="text" class="form-control" id="textInput">
+
+                                    <label for="descriptionInput" class="mt-2">Description</label>
+                                    <textarea type="text" class="form-control" id="descriptionInput"></textarea>
+
+                                    <label for="languageSelect" class="mt-2">Language</label>
+                                    <!-- Add other language options as needed -->
+                                    <select class="form-control" id="languageSelect">
+                                        <option value="english">English</option>
+                                    </select>
+
+                                    <div class="row">
+                                        <div class="col-3 mt-2 d-flex align-items-center">
+                                            <label>Categories</label>
+                                        </div>
+                                        <div class="col-9 d-flex align-items-center">
+                                            <div class="multiselect" style="width: 100%:">
+                                                <div class="select-box" onclick="toggleTagList()">Select Tags</div>
+                                                <ul class="tag-list" id="tagList">
+                                                    <li class="search-bar-container">
+                                                        <input type="text" id="searchBar"
+                                                            class="search-bar form-control" placeholder="Search...">
+                                                    </li>
+                                                    <li onclick="toggleTag('apple')">Apple</li>
+                                                    <li onclick="toggleTag('banana')">Banana</li>
+                                                    <li onclick="toggleTag('orange')">Orange</li>
+                                                    <li onclick="toggleTag('grape')">Grape</li>
+                                                    <li onclick="toggleTag('strawberry')">Strawberry</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 selected-tags" id="selectedTags"></div>
+                                    </div>
+                                </div>
                             </div>
                         </form>
 
@@ -381,6 +497,100 @@
 @endsection
 
 @section('script_2')
+    <script>
+        function showFileDesign(input) {
+            var fileName = input.files[0].name;
+            $('#selectedFileName').html('Selected PDF: ' + fileName);
+            $('#fileDesign').show();
+            $('#pdfInput').hide();
+        }
+
+        function removeFileDesign() {
+            $('#fileDesign').hide();
+            $('#pdfInput').show();
+            $('#pdfInput').val('');
+        }
+    </script>
+    <script>
+        function toggleTagList() {
+            var tagList = document.getElementById('tagList');
+            tagList.style.display = tagList.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function toggleTag(tag) {
+            var selectedTagsContainer = document.getElementById('selectedTags');
+            var existingTags = Array.from(selectedTagsContainer.children).map(tag => tag.textContent);
+
+            if (!existingTags.includes(tag)) {
+                var tagElement = document.createElement('div');
+                tagElement.textContent = tag;
+                tagElement.className = 'categori p-3 m-2 pt-1 pb-1';
+                tagElement.onclick = function() {
+                    this.remove();
+                };
+
+                selectedTagsContainer.appendChild(tagElement);
+            }
+
+            toggleTagList();
+        }
+
+        document.addEventListener('click', function(event) {
+            var tagList = document.getElementById('tagList');
+            var selectBox = document.querySelector('.select-box');
+
+            if (!selectBox.contains(event.target) && !tagList.contains(event.target)) {
+                tagList.style.display = 'none';
+            }
+        });
+
+        // Search bar functionality
+        $('#searchBar').on('input', function() {
+            var searchTerm = $(this).val().toLowerCase();
+            $('#tagList li:not(.search-bar-container)').each(function() {
+                var text = $(this).text().toLowerCase();
+                $(this).toggle(text.includes(searchTerm));
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#tagList').select2();
+
+            $('#tagList').on('select2:select', function(e) {
+                var selectedTagsContainer = document.getElementById('selectedTags');
+                var tag = e.params.data.text;
+
+                var tagElement = document.createElement('div');
+                tagElement.textContent = tag;
+                tagElement.className = 'selected-tag';
+                tagElement.onclick = function() {
+                    $(this).remove();
+                    $('#tagList').val(null).trigger('change'); // Clear the selection in the dropdown
+                };
+
+                selectedTagsContainer.appendChild(tagElement);
+            });
+        });
+    </script>
+
+
+    <script>
+        function previewImage(input) {
+            var previewContainer = document.getElementById('imagePreview');
+            var file = input.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                //<img src="{{ asset('images/jioi.png') }}" class=" product-thumb" style="box-shadow: -30px 30px 20px 0 rgba(0, 0, 0, 0.2); border-radius:10px; " width="100%" alt="">
+                previewContainer.innerHTML = '<img src="' + e.target.result + '" class=" product-thumb" style="box-shadow: -3px 3px 10px 0 rgba(0, 0, 0, 0.2); border-radius:10px; " width="100%" alt="">';
+            };
+
+            reader.readAsDataURL(file);
+        }
+    </script>
+
     <script>
         function toggleActive(clickedElement) {
             // Remove the active-menu class from all li elements

@@ -22,17 +22,22 @@ Route::get('/log-out', [AuthController::class, 'logout'])->name('logout');
 
 //check the auth of user before acceing the pages
 Route::middleware('AuthMiddleware')->group(function () {
+    Route::get('/', function () {
+        return view('home');
+    });
+
     //normal user page urls
     Route::get('/p', [UserController::class, 'page'])->name('profile');
     Route::post('/p', [UserController::class, 'update'])->name('profile_update');
     Route::post('/p/profile/update', [UserController::class, 'profileUpdate'])->name('profile.update');
     //home page
-    Route::get('/h',function(){return view('home');})->name('user.accoun.home');
+    Route::get('/h',function(){return view('home');})->name('home');
 
 
     Route::middleware('AccountMiddleware')->group(function () {
         Route::get('/list', function () {
             return view('Users.playlist');
         })->name('count.list');
+        Route::get('/acount' ,[AccountController::class,'home'])->name('user.accoun.home');
     });
 });

@@ -31,6 +31,7 @@ class User extends Authenticatable
         'is_active',
         'parent_account',
         'is_admin',
+        'background_account',
     ];
 
     /**
