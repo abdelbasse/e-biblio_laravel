@@ -32,6 +32,8 @@ class User extends Authenticatable
         'parent_account',
         'is_admin',
         'background_account',
+        'channel_name',
+        'channel_desc',
     ];
 
     /**

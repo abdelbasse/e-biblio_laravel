@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
+use App\Models\Categori;
+use App\Models\Language;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
@@ -16,6 +19,11 @@ class UserController extends Controller
         $user = User::where('id', auth()->user()->id)->first();
         $list = $user->accountes;
         return view('Users.profile')->with(['accounts' => $list]);
+    }
+
+    public function GetAccountInfo($id){
+        $books = Book::where('id_account', $id)->orWhere('id_list', null)->get();
+        return view('Users.account', ['books' => $books]);
     }
 
     public function update(Request $request)
@@ -51,6 +59,14 @@ class UserController extends Controller
             }
         } else {
             if (User::Where('name', $request->name)->count() == 0 || $user->name == $request->name) {
+                if (auth()->user()->parent_account) {
+                    if (User::Where('channel_name', $request->Chanelname)->count() == 0 || $user->channel_name == $request->Chanelname) {
+                        $user->update([
+                            'channel_name' => $request->Chanelname,
+                            'channel_desc' => $request->chanelDesc
+                        ]);
+                    }
+                }
                 $user->update([
                     'name' => $request->name,
                     'tell' => $request->tell

@@ -453,7 +453,7 @@
             position: relative;
             width: 100%;
             background-repeat: no-repeat;
-            background-image: url("{{ asset('images/jioi.png') }}");
+            background-image: url("{{ asset($book->url_cover) }}");
             background-size: 100% auto;
             background-position: 0 30%;
             color: white;
@@ -544,7 +544,7 @@
                 <div class="col-12 col-md-5 ">
                     <div class="image-book-container d-flex justify-content-center " style="">
                         <div style="position:relative; z-index:1;">
-                            <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
+                            <img src="{{ asset($book->url_cover) }}" class=" product-thumb"
                                 style="box-shadow: -30px 30px 20px 0 rgba(0, 0, 0, 0.2); border-radius:10px; "
                                 alt="">
                         </div>
@@ -554,27 +554,34 @@
                     <div class="sub-book-info-part-1 col-12">
                         <h1
                             style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; font-weight: bold;">
-                            Here the tiitle of this book it ame is somthing
+                            {{ $book->Title }}
                         </h1>
                     </div>
                     <div class="sub-book-info-part-2 col-12">
-                        <div class="sub-sub-book-info-part-1 d-flex align-items-center">
-                            <div class="part_1 d-flex justify-content-center ">
-                                <div class="imageProfileCommentConatiner d-flex align-items-center justify-content-center"
-                                    style="border-radius: 100px; width:50px; height:50px; overflow:hidden;">
-                                    <img src="{{ asset('images/Screenshot 2023-11-24 175541.png') }}" height="100%"
-                                        alt="">
+
+                        @if (auth()->user()->id !== $book->account->id)
+                            <div class="sub-sub-book-info-part-1 d-flex align-items-center">
+                                <div class="part_1 d-flex justify-content-center ">
+                                    <div class="imageProfileCommentConatiner d-flex align-items-center justify-content-center"
+                                        style="border-radius: 100px; width:50px; height:50px; overflow:hidden;">
+                                        <img src="{{ asset($book->account->profile_url) }}" height="100%" alt="">
+                                    </div>
+                                </div>
+                                <div class="part_3 m-3 mt-0 mb-0">
+                                    <a href="{{ route('user.accoun.view', ['id' => $book->account->id]) }}"
+                                        style="all:unset; cursor: pointer;">
+                                        <div style="font-weight: bold;">{{ $book->account->channel_name }}</div>
+                                        <div style="color: rgb(146, 146, 146);">23.2k subcribers</div>
+                                    </a>
+                                </div>
+
+                                <div class="part_2 m-4 mt-0 mb-0">
+                                    <button class="btn btn-secondary p-4 pt-2 pb-2"
+                                        style="border-radius:100px; background:#272935;">Subscribe</button>
                                 </div>
                             </div>
-                            <div class="part_3 m-3 mt-0 mb-0">
-                                <div style="font-weight: bold;">HassanBookShop</div>
-                                <div style="color: rgb(146, 146, 146);">23.2k subcribers</div>
-                            </div>
-                            <div class="part_2 m-4 mt-0 mb-0">
-                                <button class="btn btn-secondary p-4 pt-2 pb-2"
-                                    style="border-radius:100px; background:#272935;">Subscribe</button>
-                            </div>
-                        </div>
+                        @endif
+
                         <div class="sub-sub-book-info-part-2">
                             {{-- here put the totale rate of tis mother fucker --}}
                         </div>
@@ -588,9 +595,11 @@
                     <div class="col-12 col-md-7 " style="height: 80px;">
                         <div class=" container d-flex justify-content-between align-content-center">
                             <div class="">
-                                <button class="btn btn-secondary d-flex align-items-center p-4 pt-2 pb-2"
-                                    style="border-radius:100px; background:#272935;">Start reading <i
-                                        class='bx bx-sm bx-up-arrow-alt bx-tada bx-flip-horizontal'></i></button>
+                                <a href="{{ route('openFile', ['id' => $book->id]) }}" target="_blank"
+                                    class="btn btn-secondary d-flex align-items-center p-4 pt-2 pb-2"
+                                    style="border-radius:100px; background:#272935;">
+                                    Start reading <i class='bx bx-sm bx-up-arrow-alt bx-tada bx-flip-horizontal'></i>
+                                </a>
                             </div>
                             <div class="d-flex align-items-center">
                                 <!-- Install button -->
@@ -599,20 +608,54 @@
                                     <i class='bx bx-sm bx-bookmark bx-flip-horizontal'></i>
                                 </button>
                                 <!-- Share button -->
-                                <button class="btn d-flex justify-content-center align-items-center m-1"
+                                <button id="copyUrlBtn" class="btn d-flex justify-content-center align-items-center m-1"
                                     style="border-radius: 100px; border:1px solid rgb(151, 151, 151); width:40px; height:40px;">
                                     <i class='bx bx-share bx-sm'></i>
                                 </button>
+
+                                <!-- Include the Clipboard.js library -->
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
+
+                                <script>
+                                    document.getElementById('copyUrlBtn').addEventListener('click', function() {
+                                        // Replace 'BOOK_ID' with the actual book ID
+                                        var bookId = '';
+
+                                        // Construct the URL
+                                        var pdfUrl = "{{ route('openFile', ['id' => $book->id]) }}/" + bookId;
+
+                                        // Copy the URL to the clipboard
+                                        var clipboard = new ClipboardJS('#copyUrlBtn', {
+                                            text: function() {
+                                                return pdfUrl;
+                                            }
+                                        });
+
+                                        // Handle success or error
+                                        clipboard.on('success', function(e) {
+                                            alert('URL copied to clipboard!');
+                                            e.clearSelection();
+                                        });
+
+                                        clipboard.on('error', function(e) {
+                                            alert('Failed to copy URL to clipboard. You can manually copy the URL.');
+                                        });
+                                    });
+                                </script>
+
                                 <!-- Save button -->
                                 <button class="btn d-flex justify-content-center align-items-center m-1"
                                     style="border-radius: 100px; border:1px solid rgb(151, 151, 151); width:40px; height:40px;">
                                     <i class='bx bx-heart bx-sm'></i>
                                 </button>
                                 <!-- Like button -->
-                                <button class="btn d-flex justify-content-center align-items-center m-1"
-                                    style="border-radius: 100px; border:1px solid rgb(151, 151, 151); width:40px; height:40px;">
-                                    <i class='bx  bx-sm bx-download bx-flip-horizontal'></i>
-                                </button>
+                                <a href="{{ route('openFile', ['id' => $book->id]) }}" download="pdf_hasan.pdf"
+                                    style="all:unset;">
+                                    <button class="btn d-flex justify-content-center align-items-center m-1"
+                                        style="border-radius: 100px; border:1px solid rgb(151, 151, 151); width:40px; height:40px;">
+                                        <i class='bx  bx-sm bx-download bx-flip-horizontal'></i>
+                                    </button>
+                                </a>
                             </div>
                         </div>
                         <hr style="width: 100%">
@@ -622,34 +665,16 @@
                     <div class="col-12 col-md-6 row">
                         <div class="col-12 infor-part mt-1">
                             <h4 style="font-weight: bold;">Description</h4>
-                            <div class="peragraphe-text">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti. Vestibulum
-                                non nisl vel elit volutpat aliquam eu eget elit. Integer cursus tellus ac odio cursus,
-                                vel dignissim metus tincidunt. Sed vestibulum ex vel efficitur consectetur. In id
-                                sollicitudin orci, in laoreet libero. Vivamus ultricies ligula quis est facilisis, at
-                                pharetra turpis tempor. Sed consectetur, odio in vulputate lacinia, tortor felis cursus
-                                arcu, at facilisis est quam nec mauris. Curabitur a neque at sem placerat volutpat.
-                                Fusce quis odio a felis tincidunt vulputate. Integer ultrices tincidunt mauris, non
-                                malesuada sem fermentum in. Sed laoreet vestibulum luctus. Nulla facilisi. Integer
-                                malesuada, risus at fermentum cursus, ligula erat efficitur elit, a volutpat eros nisl
-                                ac metus. Quisque vel magna in lectus gravida dapibus. Suspendisse tincidunt orci vel
-                                justo bibendum euismod.
+                            <div class="peragraphe-text">{{ $book->desc }}
                             </div>
                         </div>
                         <div class=" col-12infor-part mt-5">
                             <h4 style="font-weight: bold;">Categories</h4>
                             <div class="peragraphe-category">
-                                <span class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">categori</span>
-                                <span class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">categori</span>
-                                <span class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">categori</span>
-                                <span class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">categori</span>
-                                <span class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">categori</span>
-                                <span class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">categori</span>
-                                <span class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">categori</span>
-                                <span class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">categori</span>
-                                <span class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">categori</span>
-                                <span class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">categori</span>
-                                <span class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">categori</span>
+                                @foreach ($book->category as $categori)
+                                    <span
+                                        class="btn btn-secondary categori p-3 m-2 pt-1 pb-1">{{ $categori->libelle }}</span>
+                                @endforeach
                             </div>
                         </div>
                     </div>
@@ -657,24 +682,20 @@
                         <div class=" col-12 infor-part mt-1">
                             <h4 style="font-weight: bold;">Editors</h4>
                             <div class="peragraphe-text">
-                                J.K. Rowling (author), Christopher Reath, Alena
-
-                                Gestabon, Steve Korg
+                                {{ $book->account->name }}
                             </div>
                         </div>
                         <div class="col-12 infor-part mt-5">
                             <h4 style="font-weight: bold;">Language</h4>
                             <div class="peragraphe-text">
-                                Standard English (USA & UK)
+                                {{ $book->language->language }} <b>({{ $book->language->short }})</b>
 
                             </div>
                         </div>
                         <div class="col-12 infor-part mt-5">
                             <h4 style="font-weight: bold;">Paperback</h4>
                             <div class="peragraphe-text">
-
-                                paper textured, full colour, 345 pages
-
+                                paper textured, full colour, pages
                                 ISBN: 987 3 32564 455 B
 
                             </div>
@@ -685,161 +706,74 @@
         </div>
 
 
-        <div class="series-overlay shadow">
-            <div class="overlay-content row">
-                <div class="col-12 col-md-3 d-flex align-items-center justify-content-center" style="height:250px;">
-                    <div style="height:90%;">
-                        <img src="{{ asset('images/jioi.png') }}"
-                            style=" overflow: hidden; border-radius:10px; "
-                            alt="" height="100%">
+        @if ($book->id_list)
+            <div class="series-overlay shadow">
+                <div class="overlay-content row">
+                    <div class="col-12 col-md-3 d-flex align-items-center justify-content-center" style="height:250px;">
+                        <div style="height:90%;">
+                            <img src="{{ asset($book->url_cover) }}" style=" overflow: hidden; border-radius:10px; "
+                                alt="" height="100%">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-9 mt-3 row">
+                        <div class="col-12 ">
+                            <div class="col-12 " style="color: #f2f2f2;">
+                                <h1>Title of the series</h1>
+                            </div>
+                            <div class="col-12" style="color: #b7b7b7;">
+                                <p class="clamped-lines">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                    Suspendisse
+                                    potenti. Vestibulum non nisl vel elit volutpat aliquam eu eget elit. Integer cursus
+                                    tellus
+                                    ac odio cursus, vel dignissim metus tincidunt. Sed vestibulum ex vel efficitur
+                                    consectetur.
+                                    In id sollicitudin orci, in laoreet libero. Vivamus ultricies ligula quis est facilisis,
+                                    at
+                                    pharetra turpis tempor. Sed consectetur</p>
+                            </div>
+
+                        </div>
+                        <div class="col-12 d-flex align-items-end pb-3">
+                            <div class="btn-container-serices">
+                                <a href="/negaaa" class="btn btn-secondary d-flex align-items-center p-4 pt-2 pb-2"
+                                    style="border-radius:100px; background:#f2f2f2; color:#2f2f2f; font-weight:bold; ">View
+                                    series <i class='bx bx-sm bx-up-arrow-alt bx-tada bx-flip-horizontal'></i></a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-9 mt-3 row">
-                    <div class="col-12 ">
-                        <div class="col-12 " style="color: #f2f2f2;">
-                            <h1>Title of the series</h1>
-                        </div>
-                        <div class="col-12" style="color: #b7b7b7;">
-                            <p class="clamped-lines">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti. Vestibulum non nisl vel elit volutpat aliquam eu eget elit. Integer cursus tellus ac odio cursus, vel dignissim metus tincidunt. Sed vestibulum ex vel efficitur consectetur. In id sollicitudin orci, in laoreet libero. Vivamus ultricies ligula quis est facilisis, at pharetra turpis tempor. Sed consectetur</p>
-                        </div>
+            </div>
+        @endif
 
-                    </div>
-                    <div class="col-12 d-flex align-items-end pb-3">
-                        <div class="btn-container-serices">
-                            <a href="/negaaa" class="btn btn-secondary d-flex align-items-center p-4 pt-2 pb-2"
-                                style="border-radius:100px; background:#f2f2f2; color:#2f2f2f; font-weight:bold; ">View series <i class='bx bx-sm bx-up-arrow-alt bx-tada bx-flip-horizontal'></i></a>
+
+        @if (count($simeler) > 0)
+            <div class="container p-0 m-0 card border-b mt-5 mb-5" style="">
+                <div class="Commenter_header_header m-5 mt-4  mb-0">
+                    <h3 style="font-weight: bold;">Similar Books </h3>
+                </div>
+                <div class="Commenter_header_body mb-3 mt-2">
+                    <section class="product">
+                        <button class="pre-btn"><i class='bx bx-md bxs-chevron-left bx-rotate-180'></i></button>
+                        <button class="nxt-btn"><i class='bx bx-md bxs-chevron-right'></i></button>
+                        <div class="product-container">
+                            @foreach ($simeler as $item)
+                                <a style="all:unset; cursor: pointer;"
+                                    href="{{ route('book.info', ['id' => $item->id]) }}" class="product-card ">
+                                    <div class="product-image" style="height:200px;">
+                                        <img src="{{ asset($item->url_cover) }}" class=" product-thumb"
+                                            style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
+                                            alt="">
+                                    </div>
+                                    <div class="product-info">
+                                        <p class="product-short-description">{{ $item->Title }}</p>
+                                    </div>
+                                </a>
+                            @endforeach
                         </div>
-                    </div>
+                    </section>
                 </div>
             </div>
-        </div>
-
-
-
-        <div class="container p-0 m-0 card border-b mt-5 mb-5" style="">
-            <div class="Commenter_header_header m-5 mt-4  mb-0">
-                <h3 style="font-weight: bold;">Similar Books </h3>
-            </div>
-            <div class="Commenter_header_body mb-3 mt-2">
-                <section class="product">
-                    <button class="pre-btn"><i class='bx bx-md bxs-chevron-left bx-rotate-180'></i></button>
-                    <button class="nxt-btn"><i class='bx bx-md bxs-chevron-right'></i></button>
-                    <div class="product-container">
-                        <div class="product-card ">
-                            <div class="product-image" style="">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                    alt="">
-                            </div>
-                            <div class="product-info">
-                                <p class="product-short-description">this book ids iugy ugui</p>
-                            </div>
-                        </div>
-                        <div class="product-card ">
-                            <div class="product-image" style="">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                    alt="">
-                            </div>
-                            <div class="product-info">
-                                <p class="product-short-description">this book ids iugy ugui</p>
-                            </div>
-                        </div>
-                        <div class="product-card ">
-                            <div class="product-image" style="">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                    alt="">
-                            </div>
-                            <div class="product-info">
-                                <p class="product-short-description">this book ids iugy ugui</p>
-                            </div>
-                        </div>
-                        <div class="product-card ">
-                            <div class="product-image" style="">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                    alt="">
-                            </div>
-                            <div class="product-info">
-                                <p class="product-short-description">this book ids iugy ugui</p>
-                            </div>
-                        </div>
-                        <div class="product-card ">
-                            <div class="product-image" style="">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                    alt="">
-                            </div>
-                            <div class="product-info">
-                                <p class="product-short-description">this book ids iugy ugui</p>
-                            </div>
-                        </div>
-                        <div class="product-card ">
-                            <div class="product-image" style="">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                    alt="">
-                            </div>
-                            <div class="product-info">
-                                <p class="product-short-description">this book ids iugy ugui</p>
-                            </div>
-                        </div>
-                        <div class="product-card ">
-                            <div class="product-image" style="">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                    alt="">
-                            </div>
-                            <div class="product-info">
-                                <p class="product-short-description">this book ids iugy ugui</p>
-                            </div>
-                        </div>
-                        <div class="product-card ">
-                            <div class="product-image" style="">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                    alt="">
-                            </div>
-                            <div class="product-info">
-                                <p class="product-short-description">this book ids iugy ugui</p>
-                            </div>
-                        </div>
-                        <div class="product-card ">
-                            <div class="product-image" style="">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                    alt="">
-                            </div>
-                            <div class="product-info">
-                                <p class="product-short-description">this book ids iugy ugui</p>
-                            </div>
-                        </div>
-                        <div class="product-card ">
-                            <div class="product-image" style="">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                    alt="">
-                            </div>
-                            <div class="product-info">
-                                <p class="product-short-description">this book ids iugy ugui</p>
-                            </div>
-                        </div>
-                        <div class="product-card ">
-                            <div class="product-image" style="">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                    alt="">
-                            </div>
-                            <div class="product-info">
-                                <p class="product-short-description">this book ids iugy ugui</p>
-                            </div>
-                        </div>
-
-                    </div>
-                </section>
-            </div>
-        </div>
+        @endif
 
         <div class="container card border-b mt-5 mb-5" style="min-height: 500px;">
             <div class="Commenter_header_header mt-4 m-3 mb-0">

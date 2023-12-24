@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\bookController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,18 +27,26 @@ Route::middleware('AuthMiddleware')->group(function () {
         return view('home');
     });
 
+    Route::get('/book/{id}', [bookController::class, 'bookInfo'])->name('book.info');
+    Route::get('/book/open/{id}', [bookController::class, 'openFile'])->name('openFile');
+
     //normal user page urls
     Route::get('/p', [UserController::class, 'page'])->name('profile');
     Route::post('/p', [UserController::class, 'update'])->name('profile_update');
     Route::post('/p/profile/update', [UserController::class, 'profileUpdate'])->name('profile.update');
+    Route::get('/acount/{id}', [UserController::class, 'GetAccountInfo'])->name('user.accoun.view');
     //home page
-    Route::get('/h',function(){return view('home');})->name('home');
+    Route::get('/h', function () {
+        return view('home');
+    })->name('home');
 
 
     Route::middleware('AccountMiddleware')->group(function () {
         Route::get('/list', function () {
             return view('Users.playlist');
         })->name('count.list');
-        Route::get('/acount' ,[AccountController::class,'home'])->name('user.accoun.home');
+
+        Route::get('/acount', [AccountController::class, 'home'])->name('user.accoun.home');
+        Route::post('/acount/addBook', [AccountController::class, 'AddBook'])->name('user.accoun.home.update');
     });
 });

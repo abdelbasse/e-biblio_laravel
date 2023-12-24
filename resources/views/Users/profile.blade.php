@@ -125,6 +125,24 @@
                                 </div>
                             </div>
                         </div>
+                        @if (auth()->user()->parent_account)
+                            <h3 class="mb-4">Acount Info</h3>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Account Name</label>
+                                        <input type="text" class="form-control"
+                                            value="{{ auth()->user()->channel_name }}" name="Chanelname">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Description</label>
+                                        <textarea type="text" class="form-control" name="chanelDesc"> {{ auth()->user()->channel_desc }} </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                         <div>
                             <button type="submit" class="btn btn-primary">Update</button>
                         </div>
@@ -143,7 +161,8 @@
                     </h4>
                 </div>
                 <div class="col-6 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
                         Create New Account
                     </button>
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -158,7 +177,8 @@
                                 <form action="" method="POST">
                                     <div class="modal-body">
                                         @csrf
-                                        <input type="text" class="form-control" name="type" value="account" hidden>
+                                        <input type="text" class="form-control" name="type" value="account"
+                                            hidden>
                                         <div class="mb-3">
                                             <label for="recipient-name" class="col-form-label">Name:</label>
                                             <input type="text" class="form-control" name="name">
@@ -246,52 +266,51 @@
         }
     </script>
     <script>
-    $(document).ready(function() {
-        $(document).on('change', '#imageInput', function(event) {
-            displaySelectedImage(event);
-            updateProfile('ko');
-        });
-
-        $(document).on('change', '#backgroundImageInput', function(event) {
-            displaySelectedBackgroundImage(event);
-            updateProfile('ok');
-        });
-
-        function updateProfile(isUpdateImage) {
-            var file;
-            var formData;
-            var type;
-            if (isUpdateImage === 'ko') {
-                file = $('#imageInput')[0].files[0];
-                formData = new FormData();
-                formData.append('file', file);
-                type = "p";
-            } else if (isUpdateImage === 'ok') {
-                file = $('#backgroundImageInput')[0].files[0];
-                formData = new FormData();
-                formData.append('backgroundFile', file);
-                type = "bg";
-            }
-
-            formData.append('type', type);
-            formData.append('_token', '{{ csrf_token() }}');
-
-            $.ajax({
-                url: '{{ route('profile.update') }}',
-                method: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    showAlertS(response.message);
-                    location.reload();
-                },
-                error: function(xhr, status, error) {
-                    showAlertD(xhr.error);
-                }
+        $(document).ready(function() {
+            $(document).on('change', '#imageInput', function(event) {
+                displaySelectedImage(event);
+                updateProfile('ko');
             });
-        }
-    });
-</script>
 
+            $(document).on('change', '#backgroundImageInput', function(event) {
+                displaySelectedBackgroundImage(event);
+                updateProfile('ok');
+            });
+
+            function updateProfile(isUpdateImage) {
+                var file;
+                var formData;
+                var type;
+                if (isUpdateImage === 'ko') {
+                    file = $('#imageInput')[0].files[0];
+                    formData = new FormData();
+                    formData.append('file', file);
+                    type = "p";
+                } else if (isUpdateImage === 'ok') {
+                    file = $('#backgroundImageInput')[0].files[0];
+                    formData = new FormData();
+                    formData.append('backgroundFile', file);
+                    type = "bg";
+                }
+
+                formData.append('type', type);
+                formData.append('_token', '{{ csrf_token() }}');
+
+                $.ajax({
+                    url: '{{ route('profile.update') }}',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        showAlertS(response.message);
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        showAlertD(xhr.error);
+                    }
+                });
+            }
+        });
+    </script>
 @endsection

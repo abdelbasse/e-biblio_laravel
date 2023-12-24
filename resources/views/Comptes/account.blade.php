@@ -225,17 +225,15 @@
                 </div>
                 <div class="col-12 col-md-10 row">
                     <div class="col-12">
-                        <h1 style="font-weight: bold; font-family:'Times New Roman', Times, serif;">Learn with
-                            Whiteboard</h1>
+                        <h1 style="font-weight: bold; font-family:'Times New Roman', Times, serif;">
+                            {{ auth()->user()->channel_name }}</h1>
                         <div style="color:gray">
-                            <p>@learnwithwhiteboard • 59.5K subscribers • 218
+                            <p><b>@</b>{{ auth()->user()->channel_name }} • 59.5K subscribers • 218
                                 books</p>
                         </div>
                     </div>
                     <div class="col-12">
-                        <p style="white-space: nowrap; overflow:hidden;">A channel created by a serial entrepreneur,
-                            Amarpreet Singh
-                            covers weekly How To's, Insights & Motivation</p>
+                        <p style="white-space: nowrap; overflow:hidden;">{{ auth()->user()->channel_desc }}</p>
                         <p style="white-space: nowrap;  overflow:hidden;"><a href="https://brandlitic.com"
                                 target="_blank">brandlitic.com</a></p>
                     </div>
@@ -269,12 +267,9 @@
         </div>
 
 
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalFullscreen">
-            Launch demo modal
-        </button>
 
-        <!-- Modal -->
+
+        <!-- Modal  book-->
         <div class="modal fade" id="exampleModalFullscreen" tabindex="-1" aria-labelledby="exampleModalFullscreenLabel"
             style="display: none;" aria-hidden="true">
             <div class="modal-dialog modal-xl">
@@ -283,9 +278,9 @@
                         <h1 class="modal-title fs-4" id="exampleModalFullscreenLabel"></h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form action="" method="post">
-                            @csrf
+                    <form action="" method="POST" id="yourFormId">
+                        @csrf
+                        <div class="modal-body">
                             <!-- Two-column layout (5,7) -->
                             <div class="row">
                                 <!-- Left Column (5) -->
@@ -293,12 +288,12 @@
                                     <label for="bookCoverInput">Book Cover</label>
                                     <input type="file" class="form-control" id="bookCoverInput"
                                         onchange="previewImage(this)">
-                                    <div >
-                                        <div class="image-book-container d-flex mt-3 justify-content-center " >
+                                    <div>
+                                        <div class="image-book-container d-flex mt-3 justify-content-center ">
                                             <div id="imagePreview" style=" max-width: 200px;">
                                                 <img src="{{ asset('images/default book.jpg') }}" class=" product-thumb"
-                                                    style="box-shadow: -30px 30px 20px 0 rgba(0, 0, 0, 0.2); border-radius:10px; " width="100%"
-                                                    alt="">
+                                                    style="box-shadow: -30px 30px 20px 0 rgba(0, 0, 0, 0.2); border-radius:10px; "
+                                                    width="100%" alt="">
                                             </div>
                                         </div>
                                     </div>
@@ -317,7 +312,7 @@
                                         </div>
                                     </div>
 
-                                    <label for="textInput" class="mt-2">Text</label>
+                                    <label for="textInput" class="mt-2">Title</label>
                                     <input type="text" class="form-control" id="textInput">
 
                                     <label for="descriptionInput" class="mt-2">Description</label>
@@ -326,7 +321,11 @@
                                     <label for="languageSelect" class="mt-2">Language</label>
                                     <!-- Add other language options as needed -->
                                     <select class="form-control" id="languageSelect">
-                                        <option value="english">English</option>
+                                        @foreach ($langes as $lange)
+                                            <option value="{{ $lange->id }}">{{ $lange->language }}
+                                                <b>({{ $lange->short }})</b>
+                                            </option>
+                                        @endforeach
                                     </select>
 
                                     <div class="row">
@@ -341,11 +340,11 @@
                                                         <input type="text" id="searchBar"
                                                             class="search-bar form-control" placeholder="Search...">
                                                     </li>
-                                                    <li onclick="toggleTag('apple')">Apple</li>
-                                                    <li onclick="toggleTag('banana')">Banana</li>
-                                                    <li onclick="toggleTag('orange')">Orange</li>
-                                                    <li onclick="toggleTag('grape')">Grape</li>
-                                                    <li onclick="toggleTag('strawberry')">Strawberry</li>
+                                                    @foreach ($tags as $tag)
+                                                        <li
+                                                            onclick="toggleTag('{{ $tag->libelle }}',{{ $tag->id }})">
+                                                            {{ $tag->libelle }}</li>
+                                                    @endforeach
                                                 </ul>
                                             </div>
                                         </div>
@@ -353,11 +352,42 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
 
-                    </div>
+                        </div>
+                    </form>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button " class="btn btn-primary" id="submiteBookForm">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal series-->
+        <div class="modal fade" id="exampleModalFullscreen2" tabindex="-1"
+            aria-labelledby="exampleModalFullscreen2Label" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-4" id="exampleModalFullscreen2Label"></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="" method="POST" id="yourFormIdSeries">
+                        @csrf
+                        <div class="modal-body">
+                            <!-- Two-column layout (5,7) -->
+                            <div class="row">
+                                <div class="col-md">
+                                    <label for="textInput" class="mt-2">Title</label>
+                                    <input type="text" class="form-control" id="textInputSeries">
+                                    <label for="descriptionInput" class="mt-2">Description</label>
+                                    <textarea type="text" class="form-control" id="descriptionInputSeries"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button " class="btn btn-primary" id="submiteSeriesForm">Submit</button>
                     </div>
                 </div>
             </div>
@@ -367,55 +397,55 @@
 
         <div class="container mb-5 p-0 m-0 mt-4">
             <div class="other-class-content the-content-part-1">
+                <div class="container">
+                    <div class="row">
+                        <div class="col d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalFullscreen">
+                                New Book
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="container m-0 p-0 d-flex flex-wrap">
-                    <a style="text-decoration: none; color:unset;" class="book-card-solo m-2 row "
-                        href="@@">
-                        <div class="col-12" style="width: 100%;">
-                            <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                alt="" width="100%">
-                        </div>
-                        <div class="col-12 mt-2">
-                            <div class="">
-                                <h5 class="title-limit">Title of this book ihdw widhwi wkdjw</h5>
+                    @foreach ($books as $book)
+                        <a style="text-decoration: none; color:unset;" class="book-card-solo m-2 row "
+                            href="{{ route('book.info', ['id' => $book->id]) }}">
+                            <div class="col-12" style="width: 100%;">
+                                <img src="{{ asset($book->url_cover) }}" class=" product-thumb"
+                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
+                                    alt="" width="100%">
                             </div>
-                            <div class="d-flex align-items-center " style="color:gray !important;">
-                                <div class="m-1 mt-0 mb-0">
-                                    25.3k views
+                            <div class="col-12 mt-2">
+                                <div class="">
+                                    <h5 class="title-limit">{{ $book->Title }}</h5>
                                 </div>
-                                .
-                                <div class="m-1 mt-0 mb-0">
-                                    2h ago
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="$$" style="text-decoration: none; color:unset;" class="book-card-solo m-2 row ">
-                        <div class="col-12" style="width: 100%;">
-                            <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                alt="" width="100%">
-                        </div>
-                        <div class="col-12 mt-2">
-                            <div class="">
-                                <h5 class="title-limit">Title of this book ihdw widhwi wkdjw</h5>
-                            </div>
-                            <div class="d-flex align-items-center " style="color:gray !important;">
-                                <div class="m-1 mt-0 mb-0">
-                                    25.3k views
-                                </div>
-                                .
-                                <div class="m-1 mt-0 mb-0">
-                                    2h ago
+                                <div class="align-items-center " style="color:gray !important;">
+                                    <div class="m-1 p-0 mt-0 mb-0">
+                                        25.3k views
+                                    </div>
+                                    <div class="m-1 p-0 mt-0 mb-0">
+                                        {{ \Carbon\Carbon::parse($book->created_at)->diffForHumans() }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
-
+                        </a>
+                    @endforeach
                 </div>
             </div>
             <div style=" display:none;" class="other-class-content the-content-part-2 ">
+                <div class="container">
+                    <div class="row">
+                        <div class="col d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                data-bs-target="#exampleModalFullscreen2">
+                                New Series
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="container m-0 p-0 d-flex flex-wrap">
+
                     <a style="text-decoration: none; color: unset;" class="book-card-solo m-2 row"
                         href="@@">
                         <div class="col-12" style="width: 100%;">
@@ -498,6 +528,56 @@
 
 @section('script_2')
     <script>
+        $(document).ready(function() {
+            $(document).on('click', '#submiteBookForm', function(event) {
+                submitForm();
+            });
+
+            function submitForm() {
+                // Get form data
+                var formData = new FormData(document.getElementById('yourFormId'));
+
+                // Additional data
+                formData.append('type', 'ok');
+                formData.append('_token', '{{ csrf_token() }}');
+
+                // Your further modifications
+                formData.append('book_cover', $('#bookCoverInput')[0].files[0]);
+                formData.append('pdf_file', $('#pdfInput')[0].files[0]);
+                formData.append('language_id', $('#languageSelect').val());
+                formData.append('title', $('#textInput').val());
+                formData.append('description', $('#descriptionInput').val());
+
+                // Tags (assuming you have an array of tag IDs)
+                var tagIds = [];
+                $('.selected-tags [data-tag-id]').each(function() {
+                    tagIds.push($(this).data('tag-id'));
+                });
+                formData.append('tag_ids', JSON.stringify(tagIds));
+
+                // AJAX request
+                $.ajax({
+                    url: '{{ route('user.accoun.home.update') }}',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        showAlertS(response.message);
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        showAlertD(xhr.error);
+                    }
+                });
+            }
+
+        });
+    </script>
+
+
+
+    <script>
         function showFileDesign(input) {
             var fileName = input.files[0].name;
             $('#selectedFileName').html('Selected PDF: ' + fileName);
@@ -517,13 +597,15 @@
             tagList.style.display = tagList.style.display === 'none' ? 'block' : 'none';
         }
 
-        function toggleTag(tag) {
+        function toggleTag(tag, tagId) {
             var selectedTagsContainer = document.getElementById('selectedTags');
-            var existingTags = Array.from(selectedTagsContainer.children).map(tag => tag.textContent);
+            var existingTags = Array.from(selectedTagsContainer.children).map(tagElement => tagElement.dataset.tag);
 
             if (!existingTags.includes(tag)) {
                 var tagElement = document.createElement('div');
                 tagElement.textContent = tag;
+                tagElement.dataset.tag = tag;
+                tagElement.dataset.tagId = tagId; // Store the tag ID
                 tagElement.className = 'categori p-3 m-2 pt-1 pb-1';
                 tagElement.onclick = function() {
                     this.remove();
@@ -584,7 +666,8 @@
 
             reader.onload = function(e) {
                 //<img src="{{ asset('images/jioi.png') }}" class=" product-thumb" style="box-shadow: -30px 30px 20px 0 rgba(0, 0, 0, 0.2); border-radius:10px; " width="100%" alt="">
-                previewContainer.innerHTML = '<img src="' + e.target.result + '" class=" product-thumb" style="box-shadow: -3px 3px 10px 0 rgba(0, 0, 0, 0.2); border-radius:10px; " width="100%" alt="">';
+                previewContainer.innerHTML = '<img src="' + e.target.result +
+                    '" class=" product-thumb" style="box-shadow: -3px 3px 10px 0 rgba(0, 0, 0, 0.2); border-radius:10px; " width="100%" alt="">';
             };
 
             reader.readAsDataURL(file);
