@@ -9,7 +9,7 @@ class ListBook extends Model
 {
     use HasFactory;
 
-    protected $table = 'book';
+    protected $table = 'list_book';
 
     protected $fillable = [
         'id',
@@ -21,5 +21,9 @@ class ListBook extends Model
     public function books()
     {
         return $this->hasMany(Book::class, 'id_list');
+    }
+
+    public function account(){
+        return $this->belongsTo(User::class, 'id_account');
     }
 }

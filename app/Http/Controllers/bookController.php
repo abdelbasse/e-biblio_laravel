@@ -3,12 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\ListBook;
+use App\Models\Categori;
+use App\Models\Language;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
 class bookController extends Controller
 {
+    public function seriesInfo($id)
+    {
+        $tages = Categori::all();
+        $lang = Language::all();
+        $list = ListBook::find($id);
+        $books = $list->books;
+        return view('Comptes.playlist', ['tags' => $tages, 'langes' => $lang, 'list' => $list, 'books' => $books]);
+    }
 
     public function bookInfo($id)
     {

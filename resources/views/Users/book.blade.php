@@ -534,9 +534,9 @@
 
 @section('body')
     <div class="container d-flex mt-5 return">
-        <button class="returnBtn d-flex justify-center align-items-center">
+        <a href="{{route('back')}}" style="text-decoration: none;"class="returnBtn d-flex justify-center align-items-center">
             <i class='bx m-2 mt-1 mb-1 bx-md bx-right-arrow-alt bx-rotate-180'></i>
-        </button>
+        </a>
     </div>
     <div class="container ">
         <div class="container p-0 border-b mt-5 mb-2">
@@ -718,24 +718,16 @@
                     <div class="col-12 col-md-9 mt-3 row">
                         <div class="col-12 ">
                             <div class="col-12 " style="color: #f2f2f2;">
-                                <h1>Title of the series</h1>
+                                <h1>{{$book->list->Title}}</h1>
                             </div>
                             <div class="col-12" style="color: #b7b7b7;">
-                                <p class="clamped-lines">Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                    Suspendisse
-                                    potenti. Vestibulum non nisl vel elit volutpat aliquam eu eget elit. Integer cursus
-                                    tellus
-                                    ac odio cursus, vel dignissim metus tincidunt. Sed vestibulum ex vel efficitur
-                                    consectetur.
-                                    In id sollicitudin orci, in laoreet libero. Vivamus ultricies ligula quis est facilisis,
-                                    at
-                                    pharetra turpis tempor. Sed consectetur</p>
+                                <p class="clamped-lines">{{$book->list->desc}}</p>
                             </div>
 
                         </div>
                         <div class="col-12 d-flex align-items-end pb-3">
                             <div class="btn-container-serices">
-                                <a href="/negaaa" class="btn btn-secondary d-flex align-items-center p-4 pt-2 pb-2"
+                                <a href="{{ route('list.info', ['id' => $book->list->id]) }}" class="btn btn-secondary d-flex align-items-center p-4 pt-2 pb-2"
                                     style="border-radius:100px; background:#f2f2f2; color:#2f2f2f; font-weight:bold; ">View
                                     series <i class='bx bx-sm bx-up-arrow-alt bx-tada bx-flip-horizontal'></i></a>
                             </div>
@@ -757,7 +749,7 @@
                         <button class="nxt-btn"><i class='bx bx-md bxs-chevron-right'></i></button>
                         <div class="product-container">
                             @foreach ($simeler as $item)
-                                <a style="all:unset; cursor: pointer;"
+                                <a style="all:unset; cursor: pointer;" class="m-2"
                                     href="{{ route('book.info', ['id' => $item->id]) }}" class="product-card ">
                                     <div class="product-image" style="height:200px;">
                                         <img src="{{ asset($item->url_cover) }}" class=" product-thumb"

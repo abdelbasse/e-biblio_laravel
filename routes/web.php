@@ -27,6 +27,13 @@ Route::middleware('AuthMiddleware')->group(function () {
         return view('home');
     });
 
+    Route::get('/return', function () {
+        return redirect()->route('home');
+    })->name('back');
+
+    Route::get('/series/{id}', [bookController::class, 'seriesInfo'])->name('list.info');
+    Route::post('/series/', [AccountController::class, 'AddToAccount'])->name('list.info.uplaod');
+
     Route::get('/book/{id}', [bookController::class, 'bookInfo'])->name('book.info');
     Route::get('/book/open/{id}', [bookController::class, 'openFile'])->name('openFile');
 
@@ -47,6 +54,6 @@ Route::middleware('AuthMiddleware')->group(function () {
         })->name('count.list');
 
         Route::get('/acount', [AccountController::class, 'home'])->name('user.accoun.home');
-        Route::post('/acount/addBook', [AccountController::class, 'AddBook'])->name('user.accoun.home.update');
+        Route::post('/acount/addBook', [AccountController::class, 'AddToAccount'])->name('user.accoun.home.update');
     });
 });

@@ -445,80 +445,52 @@
                     </div>
                 </div>
                 <div class="container m-0 p-0 d-flex flex-wrap">
-
-                    <a style="text-decoration: none; color: unset;" class="book-card-solo m-2 row"
-                        href="@@">
-                        <div class="col-12" style="width: 100%;">
-                            <div style="height: 0px;">
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -2px; top: 40px; left: 40%; position: relative; filter: blur(3px);"
-                                    alt="" width="70%">
-                            </div>
-                            <div style="height: 0px;">
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -1px; top: 25px; left: 25%; position: relative; filter: blur(1px);"
-                                    alt="" width="80%">
-                            </div>
-                            <div>
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: 0; top: -60%; position: relative;"
-                                    alt="" width="100%">
-                            </div>
-                        </div>
-
-
-                        <div class="col-12 mt-2">
-                            <div class="">
-                                <h5 class="title-limit">Title of this book ihdw widhwi wkdjw</h5>
-                            </div>
-                            <div class="d-flex align-items-center" style="color: gray;">
-                                <div class="m-1 mt-0 mb-0">
-                                    25.3k views
+                    @foreach ($lists as $list)
+                        @php
+                            $var = $list->books->count();
+                            if ($var == 0) {
+                                $image = 'images/default book.jpg';
+                            } else {
+                                $image = $list->books[0]->url_cover;
+                            }
+                        @endphp
+                        <a style="text-decoration: none; color: unset;" class="book-card-solo m-2 row"
+                            href="{{ route('list.info', ['id' => $list->id]) }}">
+                            <div class="col-12" style="width: 100%;">
+                                <div style="height: 0px;">
+                                    <img src="{{ asset($image) }}" class="product-thumb"
+                                        style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -2px; top: 40px; left: 40%; position: relative; filter: blur(3px);"
+                                        alt="" width="70%">
                                 </div>
-                                .
-                                <div class="m-1 mt-0 mb-0">
-                                    2h ago
+                                <div style="height: 0px;">
+                                    <img src="{{ asset($image) }}" class="product-thumb"
+                                        style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -1px; top: 25px; left: 25%; position: relative; filter: blur(1px);"
+                                        alt="" width="80%">
+                                </div>
+                                <div>
+                                    <img src="{{ asset($image) }}" class="product-thumb"
+                                        style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: 0; top: -60%; position: relative;"
+                                        alt="" width="100%">
                                 </div>
                             </div>
-                        </div>
-                    </a>
-
-                    <a style="text-decoration: none; color: unset;" class="book-card-solo m-2 row"
-                        href="@@">
-                        <div class="col-12" style="width: 100%;">
-                            <div style="height: 0px;">
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -2px; top: 40px; left: 40%; position: relative; filter: blur(3px);"
-                                    alt="" width="70%">
-                            </div>
-                            <div style="height: 0px;">
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -1px; top: 25px; left: 25%; position: relative; filter: blur(1px);"
-                                    alt="" width="80%">
-                            </div>
-                            <div>
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: 0; top: -60%; position: relative;"
-                                    alt="" width="100%">
-                            </div>
-                        </div>
 
 
-                        <div class="col-12 mt-2">
-                            <div class="">
-                                <h5 class="title-limit">Title of this book ihdw widhwi wkdjw</h5>
-                            </div>
-                            <div class="d-flex align-items-center" style="color: gray;">
-                                <div class="m-1 mt-0 mb-0">
-                                    25.3k views
+                            <div class="col-12 mt-2">
+                                <div class="">
+                                    <h5 class="title-limit">{{ $list->Title }}</h5>
                                 </div>
-                                .
-                                <div class="m-1 mt-0 mb-0">
-                                    2h ago
+                                <div class=" align-items-center" style="color: gray;">
+                                    <div class="m-1 mt-0 mb-0">
+                                        25.3k views
+                                    </div>
+                                    <div class="m-1 mt-0 mb-0">
+                                        {{ \Carbon\Carbon::parse($list->created_at)->diffForHumans() }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    @endforeach
+
 
                 </div>
             </div>
@@ -532,6 +504,33 @@
             $(document).on('click', '#submiteBookForm', function(event) {
                 submitForm();
             });
+            $(document).on('click', '#submiteSeriesForm', function(event) {
+                submitSeriesForm();
+            });
+
+            function submitSeriesForm() {
+                var formData = new FormData(document.getElementById('yourFormIdSeries'));
+                formData.append('type', 'no');
+                formData.append('_token', '{{ csrf_token() }}');
+
+                formData.append('title', $('#textInputSeries').val());
+                formData.append('description', $('#descriptionInputSeries').val());
+
+                $.ajax({
+                    url: '{{ route('user.accoun.home.update') }}',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        showAlertS(response.message);
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        showAlertD(xhr.error);
+                    }
+                });
+            }
 
             function submitForm() {
                 // Get form data
