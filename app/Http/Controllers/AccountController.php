@@ -16,7 +16,7 @@ class AccountController extends Controller
     {
         $tages = Categori::all();
         $lang = Language::all();
-        $books = Book::where('id_account', auth()->user()->id)->orWhere('id_list', null)->get();
+        $books = Book::where('id_account', auth()->user()->id)->Where('id_list', null)->get();
         $listbooks = ListBook::where('id_account', auth()->user()->id)->get();
         return view('Comptes.account', ['tags' => $tages, 'langes' => $lang, 'books' => $books, 'lists' => $listbooks]);
     }

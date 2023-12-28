@@ -85,13 +85,15 @@
                                 </label>
                             </div>
                             <!-- Add similar input for background profile image -->
-                            <div class="mt-3">
-                                <label for="backgroundImageInput" class="btn btn-primary btn-block rounded-3">
-                                    Change Background Profile
-                                    <input type="file" name="backgroundImage" id="backgroundImageInput" class="d-none"
-                                        onchange="displaySelectedBackgroundImage(event)">
-                                </label>
-                            </div>
+                            @if (auth()->user()->parent_account)
+                                <div class="mt-3">
+                                    <label for="backgroundImageInput" class="btn btn-primary btn-block rounded-3">
+                                        Change Background Profile
+                                        <input type="file" name="backgroundImage" id="backgroundImageInput"
+                                            class="d-none" onchange="displaySelectedBackgroundImage(event)">
+                                    </label>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -161,8 +163,7 @@
                     </h4>
                 </div>
                 <div class="col-6 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#exampleModal">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Create New Account
                     </button>
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"

@@ -97,7 +97,8 @@
 
 @section('body')
     <div class="container d-flex mt-5 return">
-        <a href="{{route('back')}}" style="text-decoration: none;" class="returnBtn d-flex justify-center align-items-center">
+        <a href="{{ route('back') }}" style="text-decoration: none;"
+            class="returnBtn d-flex justify-center align-items-center">
             <i class='bx m-2 mt-1 mb-1 bx-md bx-right-arrow-alt bx-rotate-180'></i>
         </a>
     </div>
@@ -219,8 +220,8 @@
                 <div class="col-12  col-md-4 p-5 pt-1">
                     <div class="d-flex justify-content-center" style="height:350px; width:100%;">
                         <div style="height:90%;" class=" shadow">
-                            <img src="{{ asset($image) }}" style=" overflow: hidden; border-radius:10px; " alt=""
-                                height="100%">
+                            <img src="{{ asset($image) }}" style=" overflow: hidden; border-radius:10px; "
+                                alt="" height="100%">
                         </div>
                     </div>
                     <div class="p-2">
@@ -231,20 +232,36 @@
                     <div class=" d-flex " style="width: 100%;">
                         <div class="d-flex mt-3 mb-4">
                             <!-- Install button -->
-                            <button class="btn d-flex justify-content-center align-items-center m-1"
+                            <a href="{{ route('user.series.saved', ['id' => $list->id]) }}"
+                                class="btn d-flex justify-content-center align-items-center m-1"
                                 style="border-radius: 100px; border:1px solid rgb(151, 151, 151); width:40px; height:40px;">
-                                <i class='bx bx-sm bx-bookmark bx-flip-horizontal'></i>
-                            </button>
+
+                                @if ($userSavedSeries != 0)
+                                    <!-- User has saved the series -->
+                                    <i class='bx bx-sm bxs-bookmark bx-flip-horizontal'></i>
+                                @else
+                                    <!-- User has not saved the series -->
+                                    <i class='bx bx-sm bx-bookmark bx-flip-horizontal'></i>
+                                @endif
+                            </a>
                             <!-- Share button -->
                             <button class="btn d-flex justify-content-center align-items-center m-1"
                                 style="border-radius: 100px; border:1px solid rgb(151, 151, 151); width:40px; height:40px;">
                                 <i class='bx bx-share bx-sm'></i>
                             </button>
                             <!-- Save button -->
-                            <button class="btn d-flex justify-content-center align-items-center m-1"
+                            <a href="{{ route('user.series.liked', ['id' => $list->id]) }}"
+                                class="btn d-flex justify-content-center align-items-center m-1"
                                 style="border-radius: 100px; border:1px solid rgb(151, 151, 151); width:40px; height:40px;">
-                                <i class='bx bx-heart bx-sm'></i>
-                            </button>
+
+                                @if ($userLikedSeries != 0)
+                                    <!-- User has liked the series -->
+                                    <i class='bx bxs-heart bx-sm'></i>
+                                @else
+                                    <!-- User has not liked the series -->
+                                    <i class='bx bx-heart bx-sm'></i>
+                                @endif
+                            </a>
                             <!-- Like button -->
                             <button class="btn d-flex justify-content-center align-items-center m-1"
                                 style="border-radius: 100px; border:1px solid rgb(151, 151, 151); width:40px; height:40px;">
@@ -277,8 +294,8 @@
                 </div>
                 <div class="col-12 row col-md-8 pt-3" style="background:rgba(225, 225, 225, 0.556);">
                     @foreach ($books as $book)
-                        <a style="text-decoration: none; color:unset; cursor: pointer;" href="{{route('book.info', ['id' => $book->id]) }}"
-                            class="col-12 mb-3 book-card-solo">
+                        <a style="text-decoration: none; color:unset; cursor: pointer;"
+                            href="{{ route('book.info', ['id' => $book->id]) }}" class="col-12 mb-3 book-card-solo">
                             <div class="product-card pb-0 mb-0 d-flex">
                                 <div class="product-image" style="height: 200px;">
                                     <img src="{{ asset($book->url_cover) }}" class=" product-thumb"

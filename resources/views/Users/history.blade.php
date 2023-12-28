@@ -76,44 +76,37 @@
             <div class=" row ">
                 <div class="col-12 col-md-8 pt-3 scrollable-content" style="overflow-y: auto; max-height: 500px;">
                     <h4 class="mb-3" style="font-weight: bold;">Today</h4>
-                    <a style="text-decoration: none; color:unset; cursor: pointer;" class="col-12 mb-3 book-card-solo">
-                        <div class="product-card pb-0 mb-0 d-flex">
-                            <div class="product-image" style="height: 200px;">
-                                <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                    style="overflow: hidden; border-radius:10px; " height="90%" alt="">
-                            </div>
-                            <div class=" m-4 mt-0 mb-0">
-                                <div class="col-12 ">
-                                    <div class="col-12 " style="">
-                                        <h2>Title of the series</h2>
-                                    </div>
-                                    <div class="col-12" style="">
-                                        <p class="clamped-lines">Lorem ipsum dolor sit amet, consectetur adipiscing
-                                            elit.
-                                            Suspendisse potenti. Vestibulum non nisl vel elit volutpat aliquam eu eget
-                                            elit.
-                                            Integer
-                                            cursus tellus ac odio cursus, vel dignissim metus tincidunt. Sed vestibulum
-                                            ex
-                                            vel
-                                            efficitur consectetur. In id sollicitudin orci, in laoreet libero. Vivamus
-                                            ultricies
-                                            ligula quis est facilisis, at pharetra turpis tempor. Sed consectetur</p>
-                                    </div>
+                    @foreach ($books as $item)
+                        <a style="text-decoration: none; color:unset; cursor: pointer;"
+                            href="{{ route('book.info', ['id' => $item->id]) }}" class="col-12 mb-3 book-card-solo">
+                            <div class="product-card pb-0 mb-0 d-flex">
+                                <div class="product-image" style="height: 200px;">
+                                    <img src="{{ asset($item->url_cover) }}" class=" product-thumb"
+                                        style="overflow: hidden; border-radius:10px; " height="90%" alt="">
                                 </div>
-                                <div class="d-flex align-items-center " style="color:gray !important;">
-                                    <div class="m-1 mt-0 mb-0">
-                                        25.3k views
+                                <div class=" m-4 mt-0 mb-0">
+                                    <div class="col-12 ">
+                                        <div class="col-12 " style="">
+                                            <h2>{{ $item->Title }}</h2>
+                                        </div>
+                                        <div class="col-12" style="">
+                                            <p class="clamped-lines">{{ $item->desc }}</p>
+                                        </div>
                                     </div>
-                                    .
-                                    <div class="m-1 mt-0 mb-0">
-                                        2h ago
+                                    <div class="d-flex align-items-center " style="color:gray !important;">
+                                        <div class="m-1 mt-0 mb-0">
+                                            25.3k views
+                                        </div>
+                                        .
+                                        <div class="m-1 mt-0 mb-0">
+                                            {{ \Carbon\Carbon::parse($item->pivot->created_at)->diffForHumans() }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
-                    <a style="text-decoration: none; color:unset; cursor: pointer;" class="col-12 mb-3 book-card-solo">
+                        </a>
+                    @endforeach
+                    {{-- <a style="text-decoration: none; color:unset; cursor: pointer;" class="col-12 mb-3 book-card-solo">
                         <div class="product-card pb-0 mb-0 d-flex">
                             <div class="product-image" style="height: 200px;">
                                 <div style="height: 100%;">
@@ -164,8 +157,9 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </a> --}}
 
+                    {{ $books->links('pagination::bootstrap-5') }}
                 </div>
                 <div class="col-12 col-md-4 p-5 pt-1" style="position: sticky; top: 0;">
                     <div class="search-container mt-5 pt-5">

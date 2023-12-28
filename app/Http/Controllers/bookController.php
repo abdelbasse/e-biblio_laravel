@@ -6,6 +6,10 @@ use App\Models\Book;
 use App\Models\ListBook;
 use App\Models\Categori;
 use App\Models\Language;
+use App\Models\Likes;
+use App\Models\read;
+use App\Models\Readed;
+use App\Models\Saved;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +22,12 @@ class bookController extends Controller
         $lang = Language::all();
         $list = ListBook::find($id);
         $books = $list->books;
-        return view('Comptes.playlist', ['tags' => $tages, 'langes' => $lang, 'list' => $list, 'books' => $books]);
+        $userLikedSeries = Likes::where('idUser', auth()->user()->id)->where('idList', $id)->count();
+        $userSavedSeries = Saved::where('idUser', auth()->user()->id)->where('idList', $id)->count();
+
+        return view('Comptes.playlist', [
+            'tags' => $tages, 'langes' => $lang, 'list' => $list, 'books' => $books, 'userLikedSeries' => $userLikedSeries, 'userSavedSeries' => $userSavedSeries,
+        ]);
     }
 
     public function bookInfo($id)
@@ -38,12 +47,23 @@ class bookController extends Controller
             GROUP BY book.id
             ORDER BY Totale LIMIT 15;
         ");
+        $userLikedBook = Likes::where('idUser', auth()->user()->id)->where('idBook', $id)->count();
+        $userSavedBook = Saved::where('idUser', auth()->user()->id)->where('idBook', $id)->count();
+
         $resultArray = [];
         foreach ($result as $row) {
             $extrabook = Book::find($row->id);
             $resultArray[] = $extrabook;
         }
-        return view('Users.book', ['book' => $book, 'simeler' => $resultArray]);
+
+        $read = Readed::where('id_user', auth()->user()->id)->where('id_book', $id)->count();
+        if ($read == 0) {
+            Readed::create([
+                'id_user' => auth()->user()->id,
+                'id_book' => $id,
+            ]);
+        }
+        return view('Users.book', ['book' => $book, 'simeler' => $resultArray, 'userLikedBook' => $userLikedBook, 'userSavedBook' => $userSavedBook]);
     }
 
     public function openFile($id)

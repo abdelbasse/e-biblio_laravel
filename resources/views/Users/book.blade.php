@@ -534,7 +534,8 @@
 
 @section('body')
     <div class="container d-flex mt-5 return">
-        <a href="{{route('back')}}" style="text-decoration: none;"class="returnBtn d-flex justify-center align-items-center">
+        <a href="{{ route('back') }}"
+            style="text-decoration: none;"class="returnBtn d-flex justify-center align-items-center">
             <i class='bx m-2 mt-1 mb-1 bx-md bx-right-arrow-alt bx-rotate-180'></i>
         </a>
     </div>
@@ -603,10 +604,15 @@
                             </div>
                             <div class="d-flex align-items-center">
                                 <!-- Install button -->
-                                <button class="btn d-flex justify-content-center align-items-center m-1"
+                                <a href="{{ route('user.book.saved', ['id' => $book->id]) }}" class="btn d-flex justify-content-center align-items-center m-1"
                                     style="border-radius: 100px; border:1px solid rgb(151, 151, 151); width:40px; height:40px;">
-                                    <i class='bx bx-sm bx-bookmark bx-flip-horizontal'></i>
-                                </button>
+
+                                    @if ($userSavedBook==0)
+                                        <i class='bx bx-sm bx-bookmark bx-flip-horizontal'></i>
+                                    @else
+                                        <i class='bx bx-sm bxs-bookmark bx-flip-horizontal'></i>
+                                    @endif
+                                </a>
                                 <!-- Share button -->
                                 <button id="copyUrlBtn" class="btn d-flex justify-content-center align-items-center m-1"
                                     style="border-radius: 100px; border:1px solid rgb(151, 151, 151); width:40px; height:40px;">
@@ -644,10 +650,14 @@
                                 </script>
 
                                 <!-- Save button -->
-                                <button class="btn d-flex justify-content-center align-items-center m-1"
+                                <a href="{{ route('user.book.liked', ['id' => $book->id]) }}" class="btn d-flex justify-content-center align-items-center m-1"
                                     style="border-radius: 100px; border:1px solid rgb(151, 151, 151); width:40px; height:40px;">
-                                    <i class='bx bx-heart bx-sm'></i>
-                                </button>
+                                    @if ($userLikedBook==0)
+                                        <i class='bx bx-heart bx-sm'></i>
+                                    @else
+                                        <i class='bx bxs-heart bx-sm'></i>
+                                    @endif
+                                </a>
                                 <!-- Like button -->
                                 <a href="{{ route('openFile', ['id' => $book->id]) }}" download="pdf_hasan.pdf"
                                     style="all:unset;">
@@ -718,16 +728,17 @@
                     <div class="col-12 col-md-9 mt-3 row">
                         <div class="col-12 ">
                             <div class="col-12 " style="color: #f2f2f2;">
-                                <h1>{{$book->list->Title}}</h1>
+                                <h1>{{ $book->list->Title }}</h1>
                             </div>
                             <div class="col-12" style="color: #b7b7b7;">
-                                <p class="clamped-lines">{{$book->list->desc}}</p>
+                                <p class="clamped-lines">{{ $book->list->desc }}</p>
                             </div>
 
                         </div>
                         <div class="col-12 d-flex align-items-end pb-3">
                             <div class="btn-container-serices">
-                                <a href="{{ route('list.info', ['id' => $book->list->id]) }}" class="btn btn-secondary d-flex align-items-center p-4 pt-2 pb-2"
+                                <a href="{{ route('list.info', ['id' => $book->list->id]) }}"
+                                    class="btn btn-secondary d-flex align-items-center p-4 pt-2 pb-2"
                                     style="border-radius:100px; background:#f2f2f2; color:#2f2f2f; font-weight:bold; ">View
                                     series <i class='bx bx-sm bx-up-arrow-alt bx-tada bx-flip-horizontal'></i></a>
                             </div>

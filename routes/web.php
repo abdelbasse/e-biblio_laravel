@@ -23,17 +23,43 @@ Route::get('/log-out', [AuthController::class, 'logout'])->name('logout');
 
 //check the auth of user before acceing the pages
 Route::middleware('AuthMiddleware')->group(function () {
+    //home page
+    Route::get('/h', function () {
+        return view('home');
+    })->name('home');
+
     Route::get('/', function () {
         return view('home');
     });
+
+    //liked and saved routes
+    Route::get('/book/{id}/liked/', [UserController::class, 'saveLike'])->name('user.book.liked');
+    Route::get('/book/{id}/saved/', [UserController::class, 'saveSaved'])->name('user.book.saved');
+    //for list
+    Route::get('/series/{id}/liked/', [UserController::class,'toggleSeriesLike'])->name('user.series.liked');
+    Route::get('/series/{id}/saved/', [UserController::class,'toggleSeriesSaved'])->name('user.series.saved');
+
+    Route::get('/activite/liked',[UserController::class,'LikedBooks_List'])->name('user.likes');
+    Route::get('/activite/mareked',[UserController::class,'SavedBooks_List'])->name('user.saved');
+
+    //liked and saved routes for user
+    Route::get('/book/{id}/liked/', [UserController::class, 'saveLike'])->name('user.book.liked');
+    Route::get('/book/{id}/saved/', [UserController::class, 'saveSaved'])->name('user.book.saved');
+
 
     Route::get('/return', function () {
         return redirect()->route('home');
     })->name('back');
 
+    // histrory accecebel fo all
+    Route::get('/history', [UserController::class, 'History'])->name('history');
+
+
+    //page series book accesebel by all
     Route::get('/series/{id}', [bookController::class, 'seriesInfo'])->name('list.info');
     Route::post('/series/', [AccountController::class, 'AddToAccount'])->name('list.info.uplaod');
 
+    //page book accesebel by all
     Route::get('/book/{id}', [bookController::class, 'bookInfo'])->name('book.info');
     Route::get('/book/open/{id}', [bookController::class, 'openFile'])->name('openFile');
 
@@ -42,12 +68,11 @@ Route::middleware('AuthMiddleware')->group(function () {
     Route::post('/p', [UserController::class, 'update'])->name('profile_update');
     Route::post('/p/profile/update', [UserController::class, 'profileUpdate'])->name('profile.update');
     Route::get('/acount/{id}', [UserController::class, 'GetAccountInfo'])->name('user.accoun.view');
-    //home page
-    Route::get('/h', function () {
-        return view('home');
-    })->name('home');
 
 
+
+
+    //pages fo account user
     Route::middleware('AccountMiddleware')->group(function () {
         Route::get('/list', function () {
             return view('Users.playlist');
@@ -56,4 +81,8 @@ Route::middleware('AuthMiddleware')->group(function () {
         Route::get('/acount', [AccountController::class, 'home'])->name('user.accoun.home');
         Route::post('/acount/addBook', [AccountController::class, 'AddToAccount'])->name('user.accoun.home.update');
     });
+
+
+    //page book accesebel by all
+    // ....
 });

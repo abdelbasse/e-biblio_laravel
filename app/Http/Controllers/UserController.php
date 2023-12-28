@@ -5,15 +5,133 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Categori;
 use App\Models\Language;
+use App\Models\Likes;
+use App\Models\Saved;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    //
+
+    // Gestion User Liked and disliked post and History
+    public function History()
+    {
+        $user = auth()->user();
+        $allbooks = $user->ReadedBook()->orderBy('created_at', 'desc')->paginate(60);
+        return view('Users.history', ['books' => $allbooks]);
+    }
+
+    public function SavedBooks_List()
+    {
+        $user = auth()->user();
+        $books = $user->SavedBooks()->paginate(60);
+        $lists = $user->SavedList()->paginate(60);
+        return view('Saved&Liked', ['books' => $books, 'lists' => $lists, 'liked' => 0]);
+    }
+
+    public function LikedBooks_List()
+    {
+        $books = auth()->user()->LikedBooks()->paginate(60);
+        $lists = auth()->user()->LikedList()->paginate(60);
+        return view('Saved&Liked', ['books' => $books, 'lists' => $lists, 'liked' => 1]);
+    }
+
+    public function toggleSeriesLike($id)
+    {
+        $userId = auth()->user()->id;
+        $like = Likes::where('idUser', $userId)->where('idList', $id)->count();
+
+        // If the user has already liked the series, delete the like
+        if ($like != 0) {
+            DB::table('likes')
+                ->where('idUser', $userId)
+                ->where('idList', $id)
+                ->delete();
+            return redirect()->back()->with('success', 'Like removed successfully.');
+        }
+
+        // If the user hasn't liked the series yet, create a new like
+        Likes::create([
+            'idUser' => $userId,
+            'idList' => $id,
+        ]);
+
+        return redirect()->back()->with('success', 'Series liked successfully.');
+    }
+
+    public function toggleSeriesSaved($id)
+    {
+        $userId = auth()->user()->id;
+        $existingSaved = Saved::where('idUser', $userId)->where('idList', $id)->count();
+
+        // If the user has already saved the series, delete the saved status
+        if ($existingSaved != 0) {
+            DB::table('saved')
+                ->where('idUser', $userId)
+                ->where('idList', $id)
+                ->delete();
+            return redirect()->back()->with('success', 'Saved status removed successfully.');
+        }
+
+        // If the user hasn't saved the series yet, create a new saved status
+        Saved::create([
+            'idUser' => $userId,
+            'idList' => $id,
+        ]);
+
+        return redirect()->back()->with('success', 'Series saved successfully.');
+    }
+
+    public function saveLike($id)
+    {
+        $userId = auth()->user()->id;
+
+        $existingLike = Likes::where('idUser', $userId)->where('idBook', $id)->count();
+
+        if ($existingLike != 0) {
+            DB::table('likes')
+                ->where('idUser', $userId)
+                ->where('idBook', $id)
+                ->delete();
+            return redirect()->back()->with('success', 'Like removed successfully.');
+        }
+
+        Likes::create([
+            'idUser' => $userId,
+            'idBook' => $id,
+        ]);
+
+        return redirect()->back()->with('success', 'Book liked successfully.');
+    }
+
+    public function saveSaved($id)
+    {
+        $userId = auth()->user()->id;
+
+        $existingSaved = Saved::where('idUser', $userId)->where('idBook', $id)->count();
+        if ($existingSaved != 0) {
+            DB::table('saved')
+                ->where('idUser', $userId)
+                ->where('idBook', $id)
+                ->delete();
+            return redirect()->back()->with('success', 'Saved status removed successfully.');
+        }
+
+        Saved::create([
+            'idUser' => $userId,
+            'idBook' => $id,
+        ]);
+
+        return redirect()->back()->with('success', 'Book saved successfully.');
+    }
+
+    //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+    //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
     public function page()
     {
         $user = User::where('id', auth()->user()->id)->first();
@@ -21,7 +139,8 @@ class UserController extends Controller
         return view('Users.profile')->with(['accounts' => $list]);
     }
 
-    public function GetAccountInfo($id){
+    public function GetAccountInfo($id)
+    {
         $books = Book::where('id_account', $id)->orWhere('id_list', null)->get();
         return view('Users.account', ['books' => $books]);
     }

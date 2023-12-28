@@ -123,116 +123,86 @@
 
 <body>
     <div class="sidebar close">
-        <div class="logo-details ">
-            <div style="min-width: 78px; min-height:78px; max-width: 78px; max-height:78px;"
-                class=" d-flex justify-content-center align-items-center">
-                <img src="{{ asset('icons/open-book.png') }}" class="" width="50%" alt="">
+
+        <a href="{{ route('home') }}" style="all:unset; cursor: pointer;">
+            <div class="logo-details ">
+                <div style="min-width: 78px; min-height:78px; max-width: 78px; max-height:78px;"
+                    class=" d-flex justify-content-center align-items-center">
+                    <img src="{{ asset('icons/open-book.png') }}" class="" width="50%" alt="">
+                </div>
+                <span class="logo_name">E-Library </span>
             </div>
-            <span class="logo_name">E-Library </span>
-        </div>
+        </a>
         <ul class="nav-links">
             <li>
-                <a href="#">
+                <a href="{{ route('home') }}">
                     <i class='bx bx-grid-alt'></i>
                     <span class="link_name">Dashboard</span>
                 </a>
                 <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Category</a></li>
+                    <li><a class="link_name" href="{{ route('home') }}">Category</a></li>
                 </ul>
             </li>
-            <li>
-                <div class="iocn-link">
+            @if (auth()->user()->is_admin == 1)
+                <li>
                     <a href="#">
-                        <i class='bx bx-collection'></i>
-                        <span class="link_name">Category</span>
+                        <i class='bx bx-grid-alt'></i>
+                        <span class="link_name">Dashboard</span>
                     </a>
-                    <i class='bx bxs-chevron-down arrow'></i>
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name" href="#">Category</a></li>
-                    <li><a href="#">HTML & CSS</a></li>
-                    <li><a href="#">JavaScript</a></li>
-                    <li><a href="#">PHP & MySQL</a></li>
-                </ul>
-            </li>
-            <li>
-                <div class="iocn-link">
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Category</a></li>
+                    </ul>
+                </li>
+            @elseif (auth()->user()->parent_account != null)
+                <li>
+                    <a href="{{ route('user.accoun.home') }}">
+                        <i class='bx bx-user-circle'></i>
+                        <span class="link_name">Account</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="{{ route('user.accoun.home') }}">Account</a></li>
+                    </ul>
+                </li>
+            @else
+                <li>
                     <a href="#">
-                        <i class='bx bx-book-alt'></i>
-                        <span class="link_name">Posts</span>
+                        <i class='bx bx-pie-chart-alt-2'></i>
+                        <span class="link_name">Analytics</span>
                     </a>
-                    <i class='bx bxs-chevron-down arrow'></i>
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name" href="#">Posts</a></li>
-                    <li><a href="#">Web Design</a></li>
-                    <li><a href="#">Login Form</a></li>
-                    <li><a href="#">Card Design</a></li>
-                </ul>
-            </li>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="#">Analytics</a></li>
+                    </ul>
+                </li>
+            @endif
             <li>
-                <a href="#">
-                    <i class='bx bx-pie-chart-alt-2'></i>
-                    <span class="link_name">Analytics</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Analytics</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-line-chart'></i>
-                    <span class="link_name">Chart</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Chart</a></li>
-                </ul>
-            </li>
-            <li>
-                <div class="iocn-link">
-                    <a href="#">
-                        <i class='bx bx-plug'></i>
-                        <span class="link_name">Plugins</span>
-                    </a>
-                    <i class='bx bxs-chevron-down arrow'></i>
-                </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name" href="#">Plugins</a></li>
-                    <li><a href="#">UI Face</a></li>
-                    <li><a href="#">Pigments</a></li>
-                    <li><a href="#">Box Icons</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
-                    <i class='bx bx-compass'></i>
-                    <span class="link_name">Explore</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Explore</a></li>
-                </ul>
-            </li>
-            <li>
-                <a href="#">
+                <a href="{{ route('history') }}">
                     <i class='bx bx-history'></i>
                     <span class="link_name">History</span>
                 </a>
                 <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">History</a></li>
+                    <li><a class="link_name" href="{{ route('user.accoun.home') }}">History</a></li>
                 </ul>
             </li>
             <li>
-                <a href="#">
-                    <i class='bx bx-cog'></i>
-                    <span class="link_name">Setting</span>
-                </a>
-                <ul class="sub-menu blank">
-                    <li><a class="link_name" href="#">Setting</a></li>
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-time-five'></i>
+                        <span class="link_name">Activities</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow'></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="#">Activities</a></li>
+                    <li><a href="{{ route('user.likes') }}">
+                            <i class='bx bxs-heart' style="min-width: 40px;"></i>Likes</a></li>
+                    <li><a href="{{ route('user.saved') }}"><i class='bx bxs-bookmark'
+                                style="min-width: 40px;"></i>Saved</a></li>
                 </ul>
             </li>
+
             <li>
                 <div class="profile-details">
-                    <a href="{{route('profile')}}">
+                    <a href="{{ route('profile') }}">
                         <div class="profile-content">
                             <img src="{{ asset(auth()->user()->profile_url) }}" alt="profileImg">
                         </div>
@@ -420,7 +390,7 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                             </div>`;
 
-                                        }
+    }
 
     function showAlertD(message) {
         alertsContainer.innerHTML += `<div class="alert d-flex justify-content-between alert-danger bg-danger text-white  alert-dismissible" style="opacity:0.65;" role="alert">
@@ -429,7 +399,7 @@
 <div>${message}</div>
 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>`;
-}
+    }
 </script>
 
 @yield('script_2')

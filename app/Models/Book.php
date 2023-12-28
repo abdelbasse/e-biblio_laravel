@@ -47,4 +47,11 @@ class Book extends Model
     public function account(){
         return $this->belongsTo(User::class, 'id_account');
     }
+
+    //function return the books he read (for user and account)
+    public function LikedBy()
+    {
+        return $this->belongsToMany(User::class, 'likes', 'idBook', 'idUser');
+    }
+
 }

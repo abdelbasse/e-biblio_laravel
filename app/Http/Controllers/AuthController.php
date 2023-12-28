@@ -22,9 +22,9 @@ class AuthController extends Controller
                     if (auth::user()->is_admin == true) {
                         return redirect()->route('home');
                     } elseif (auth::user()->is_account == true) {
-                        return view('Users.playlist');
+                        return view('home');
                     } else {
-                        return view('Users.history');
+                        return view('home');
                     }
                 } else {
                     return redirect()->route('loging')->withErrors(['Ereur' => 'this account is not active anymore due to many many reports']);

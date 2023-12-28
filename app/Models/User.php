@@ -72,8 +72,30 @@ class User extends Authenticatable
     }
 
     //function return the books he read (for user and account)
-    public function read()
+    public function ReadedBook()
     {
-        return $this->belongsToMany(Book::class, 'read', 'id_user', 'id_book');
+        return $this->belongsToMany(Book::class, 'table_read', 'id_user', 'id_book')->withPivot('created_at');
+    }
+
+    //function return the books he liked (for user and account)
+    public function LikedBooks()
+    {
+        return $this->belongsToMany(Book::class, 'likes', 'idUser', 'idBook');
+    }
+
+    public function LikedList()
+    {
+        return $this->belongsToMany(ListBook::class, 'likes', 'idUser', 'idList');
+    }
+
+    //function return the books he Saved (for user and account)
+    public function SavedBooks()
+    {
+        return $this->belongsToMany(Book::class, 'saved', 'idUser', 'idBook');
+    }
+
+    public function SavedList()
+    {
+        return $this->belongsToMany(ListBook::class, 'saved', 'idUser', 'idList');
     }
 }
