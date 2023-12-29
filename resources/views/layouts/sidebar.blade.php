@@ -140,17 +140,26 @@
                     <span class="link_name">Dashboard</span>
                 </a>
                 <ul class="sub-menu blank">
-                    <li><a class="link_name" href="{{ route('home') }}">Category</a></li>
+                    <li><a class="link_name" href="{{ route('home') }}">Dashboard</a></li>
                 </ul>
             </li>
             @if (auth()->user()->is_admin == 1)
                 <li>
-                    <a href="#">
-                        <i class='bx bx-grid-alt'></i>
-                        <span class="link_name">Dashboard</span>
+                    <a href="{{ route('admin.book.valide') }}">
+                        <i class='bx bx-message-alt-check'></i>
+                        <span class="link_name">Valide Quest</span>
                     </a>
                     <ul class="sub-menu blank">
-                        <li><a class="link_name" href="#">Category</a></li>
+                        <li><a class="link_name" href="{{ route('admin.book.valide') }}"">Valide Quest</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="{{ route('admin.users.list') }}">
+                        <i class='bx bxs-user-detail' ></i>
+                        <span class="link_name">Channels</span>
+                    </a>
+                    <ul class="sub-menu blank">
+                        <li><a class="link_name" href="{{ route('admin.users.list') }}"">Channels</a></li>
                     </ul>
                 </li>
             @elseif (auth()->user()->parent_account != null)
@@ -161,16 +170,6 @@
                     </a>
                     <ul class="sub-menu blank">
                         <li><a class="link_name" href="{{ route('user.accoun.home') }}">Account</a></li>
-                    </ul>
-                </li>
-            @else
-                <li>
-                    <a href="#">
-                        <i class='bx bx-pie-chart-alt-2'></i>
-                        <span class="link_name">Analytics</span>
-                    </a>
-                    <ul class="sub-menu blank">
-                        <li><a class="link_name" href="#">Analytics</a></li>
                     </ul>
                 </li>
             @endif

@@ -76,6 +76,20 @@
             <div class=" row ">
                 <div class="col-12 col-md-8 pt-3 scrollable-content" style="overflow-y: auto; max-height: 500px;">
                     <h4 class="mb-3" style="font-weight: bold;">Today</h4>
+                    @php
+                        if (!function_exists('formatLargeNumber')) {
+                            function formatLargeNumber($number)
+                            {
+                                if ($number >= 1000000) {
+                                    return number_format($number / 1000000, 1) . 'M';
+                                } elseif ($number >= 1000) {
+                                    return number_format($number / 1000, 1) . 'K';
+                                } else {
+                                    return $number;
+                                }
+                            }
+                        }
+                    @endphp
                     @foreach ($books as $item)
                         <a style="text-decoration: none; color:unset; cursor: pointer;"
                             href="{{ route('book.info', ['id' => $item->id]) }}" class="col-12 mb-3 book-card-solo">
@@ -95,7 +109,7 @@
                                     </div>
                                     <div class="d-flex align-items-center " style="color:gray !important;">
                                         <div class="m-1 mt-0 mb-0">
-                                            25.3k views
+                                            {{ formatLargeNumber(count($item->readBy)) }} views
                                         </div>
                                         .
                                         <div class="m-1 mt-0 mb-0">

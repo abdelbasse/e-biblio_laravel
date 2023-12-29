@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -53,6 +54,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
+        'AdminMiddleware' => \App\Http\Middleware\AdminMiddleware::class,
         'AuthMiddleware' => \App\Http\Middleware\AuthMiddleware::class,
         'AccountMiddleware' => \App\Http\Middleware\AccountMiddleware::class,
         'auth' => \App\Http\Middleware\Authenticate::class,

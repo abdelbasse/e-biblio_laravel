@@ -539,6 +539,20 @@
             <i class='bx m-2 mt-1 mb-1 bx-md bx-right-arrow-alt bx-rotate-180'></i>
         </a>
     </div>
+    @php
+    if (!function_exists('formatLargeNumber')) {
+        function formatLargeNumber($number)
+        {
+            if ($number >= 1000000) {
+                return number_format($number / 1000000, 1) . 'M';
+            } elseif ($number >= 1000) {
+                return number_format($number / 1000, 1) . 'K';
+            } else {
+                return $number;
+            }
+        }
+    }
+@endphp
     <div class="container ">
         <div class="container p-0 border-b mt-5 mb-2">
             <div class="detail_part_1 row">

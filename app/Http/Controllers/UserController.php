@@ -6,6 +6,7 @@ use App\Models\Book;
 use App\Models\Categori;
 use App\Models\Language;
 use App\Models\Likes;
+use App\Models\ListBook;
 use App\Models\Saved;
 use App\Models\User;
 use Illuminate\Contracts\Validation\Rule;
@@ -141,8 +142,10 @@ class UserController extends Controller
 
     public function GetAccountInfo($id)
     {
-        $books = Book::where('id_account', $id)->orWhere('id_list', null)->get();
-        return view('Users.account', ['books' => $books]);
+        $user = User::where('id', $id)->where('is_active', 1)->get();
+        $books = Book::where('id_account', $id)->get();
+        $lists = ListBook::where('id_account', $id)->get();
+        return view('Users.account', ['user' => $user,'books'=>$books,'lists'=>$lists]);
     }
 
     public function update(Request $request)

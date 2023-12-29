@@ -56,7 +56,7 @@ class User extends Authenticatable
     ];
 
     // the books he post it (for account)
-    public function books()
+    public function allBooks()
     {
         return $this->hasMany(Book::class, 'id_account');
     }
@@ -97,5 +97,10 @@ class User extends Authenticatable
     public function SavedList()
     {
         return $this->belongsToMany(ListBook::class, 'saved', 'idUser', 'idList');
+    }
+
+    public function allBook()
+    {
+        return $this->hasMany(Book::class, 'id_account');
     }
 }

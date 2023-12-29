@@ -16,6 +16,14 @@ use Illuminate\Support\Facades\DB;
 
 class bookController extends Controller
 {
+
+    public function HomePage()
+    {
+        $books = Book::where('is_valid', true)->paginate(30);
+        $lists = ListBook::paginate(30);
+        return view('home', ['books' => $books, 'lists' => $lists]);
+    }
+
     public function seriesInfo($id)
     {
         $tages = Categori::all();

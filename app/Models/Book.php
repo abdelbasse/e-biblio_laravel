@@ -41,7 +41,7 @@ class Book extends Model
     //function return the books he read (for user and account)
     public function readBy()
     {
-        return $this->belongsToMany(User::class, 'read', 'id_book', 'id_user');
+        return $this->belongsToMany(User::class, 'table_read', 'id_book', 'id_user');
     }
 
     public function account(){
@@ -51,7 +51,7 @@ class Book extends Model
     //function return the books he read (for user and account)
     public function LikedBy()
     {
-        return $this->belongsToMany(User::class, 'likes', 'idBook', 'idUser');
+        return $this->belongsToMany(User::class, 'likes', 'idBook', 'idUser')->onDelete('cascade');
     }
 
 }

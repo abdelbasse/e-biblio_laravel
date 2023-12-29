@@ -293,6 +293,20 @@
                     @endif
                 </div>
                 <div class="col-12 row col-md-8 pt-3" style="background:rgba(225, 225, 225, 0.556);">
+                    @php
+                    if (!function_exists('formatLargeNumber')) {
+                        function formatLargeNumber($number)
+                        {
+                            if ($number >= 1000000) {
+                                return number_format($number / 1000000, 1) . 'M';
+                            } elseif ($number >= 1000) {
+                                return number_format($number / 1000, 1) . 'K';
+                            } else {
+                                return $number;
+                            }
+                        }
+                    }
+                @endphp
                     @foreach ($books as $book)
                         <a style="text-decoration: none; color:unset; cursor: pointer;"
                             href="{{ route('book.info', ['id' => $book->id]) }}" class="col-12 mb-3 book-card-solo">
@@ -312,7 +326,7 @@
                                     </div>
                                     <div class="d-flex align-items-center " style="color:gray !important;">
                                         <div class="m-1 mt-0 mb-0">
-                                            25.3k views
+                                            {{ formatLargeNumber(count($book->readBy)) }} views
                                         </div>
                                         .
                                         <div class="m-1 mt-0 mb-0">

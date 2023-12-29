@@ -407,6 +407,20 @@
                         </div>
                     </div>
                 </div>
+                @php
+                if (!function_exists('formatLargeNumber')) {
+                    function formatLargeNumber($number)
+                    {
+                        if ($number >= 1000000) {
+                            return number_format($number / 1000000, 1) . 'M';
+                        } elseif ($number >= 1000) {
+                            return number_format($number / 1000, 1) . 'K';
+                        } else {
+                            return $number;
+                        }
+                    }
+                }
+            @endphp
                 <div class="container m-0 p-0 d-flex flex-wrap">
                     @foreach ($books as $book)
                         <a style="text-decoration: none; color:unset;" class="book-card-solo m-2 row "
@@ -422,7 +436,7 @@
                                 </div>
                                 <div class="align-items-center " style="color:gray !important;">
                                     <div class="m-1 p-0 mt-0 mb-0">
-                                        25.3k views
+                                        {{ formatLargeNumber(count($book->readBy)) }} views
                                     </div>
                                     <div class="m-1 p-0 mt-0 mb-0">
                                         {{ \Carbon\Carbon::parse($book->created_at)->diffForHumans() }}
@@ -480,9 +494,6 @@
                                     <h5 class="title-limit">{{ $list->Title }}</h5>
                                 </div>
                                 <div class=" align-items-center" style="color: gray;">
-                                    <div class="m-1 mt-0 mb-0">
-                                        25.3k views
-                                    </div>
                                     <div class="m-1 mt-0 mb-0">
                                         {{ \Carbon\Carbon::parse($list->created_at)->diffForHumans() }}
                                     </div>

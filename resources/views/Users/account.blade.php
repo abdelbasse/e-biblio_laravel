@@ -86,16 +86,30 @@
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            overflow: hidden ;
+            overflow: hidden;
         }
     </style>
 @endsection
 
 @section('body')
+    @php
+        if (!function_exists('formatLargeNumber')) {
+            function formatLargeNumber($number)
+            {
+                if ($number >= 1000000) {
+                    return number_format($number / 1000000, 1) . 'M';
+                } elseif ($number >= 1000) {
+                    return number_format($number / 1000, 1) . 'K';
+                } else {
+                    return $number;
+                }
+            }
+        }
+    @endphp
     <div class="container mt-5">
         <div class="row mb-3">
             <div class="col-12">
-                <div class="profile-image" style="background-image: url('{{ asset('images/backgroundProfile.png') }}');">
+                <div class="profile-image" style="background-image: url('{{ asset(auth()->user()->background_account) }}');">
                 </div>
             </div>
             <div class="row col-12 mt-3 ">
@@ -103,23 +117,21 @@
                     <div class="part_1 d-flex justify-content-center align-items-center">
                         <div class="imageProfileCommentConatiner d-flex align-items-center justify-content-center"
                             style="border-radius: 100px; height:160px; overflow:hidden;">
-                            <img src="{{ asset('images/profile.jpg') }}" height="100%" alt="">
+                            <img src="{{ asset(auth()->user()->profile_url) }}" height="100%" alt="">
                         </div>
                     </div>
                 </div>
                 <div class="col-12 col-md-10 row">
                     <div class="col-12">
-                        <h1 style="font-weight: bold; font-family:'Times New Roman', Times, serif;">Learn with
-                            Whiteboard</h1>
+                        <h1 style="font-weight: bold; font-family:'Times New Roman', Times, serif;">
+                            {{ auth()->user()->channel_name }}</h1>
                         <div style="color:gray">
-                            <p>@learnwithwhiteboard • 59.5K subscribers • 218
+                            <p><b>@</b>{{ auth()->user()->channel_name }} • 59.5K subscribers • 1
                                 books</p>
                         </div>
                     </div>
                     <div class="col-12">
-                        <p style="white-space: nowrap; overflow:hidden;">A channel created by a serial entrepreneur,
-                            Amarpreet Singh
-                            covers weekly How To's, Insights & Motivation</p>
+                        <p style="white-space: nowrap; overflow:hidden;">{{ auth()->user()->channel_desc }}</p>
                         <p style="white-space: nowrap;  overflow:hidden;"><a href="https://brandlitic.com"
                                 target="_blank">brandlitic.com</a></p>
                     </div>
@@ -130,7 +142,6 @@
                                 style="border-radius:100px; background:#272935;">Subscribe</button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -161,127 +172,78 @@
         <div class="container mb-5 p-0 m-0 mt-4">
             <div class="other-class-content the-content-part-1">
                 <div class="container m-0 p-0 d-flex flex-wrap">
-                    <a style="text-decoration: none; color:unset;" class="book-card-solo m-2 row "
-                        href="@@">
-                        <div class="col-12" style="width: 100%;">
-                            <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                alt="" width="100%">
-                        </div>
-                        <div class="col-12 mt-2">
-                            <div class="">
-                                <h5 class="title-limit">Title of this book ihdw widhwi wkdjw</h5>
-                            </div>
-                            <div class="d-flex align-items-center " style="color:gray !important;">
-                                <div class="m-1 mt-0 mb-0">
-                                    25.3k views
+                    @foreach ($books as $book)
+                        @if ($book->is_valid)
+                            <a style="text-decoration: none; color:unset;" class="book-card-solo m-2 row "
+                                href="{{ route('book.info', ['id' => $book->id]) }}">
+                                <div class="col-12" style="width: 100%;">
+                                    <img src="{{ asset($book->url_cover) }}" class=" product-thumb"
+                                        style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
+                                        alt="" width="100%">
                                 </div>
-                                .
-                                <div class="m-1 mt-0 mb-0">
-                                    2h ago
+                                <div class="col-12 mt-2">
+                                    <div class="">
+                                        <h5 class="title-limit">{{ $book->Title }}</h5>
+                                    </div>
+                                    <div class="align-items-center " style="color:gray !important;">
+                                        <div class="m-1 p-0 mt-0 mb-0">
+                                            {{ formatLargeNumber(count($book->readBy)) }} views
+                                        </div>
+                                        <div class="m-1 p-0 mt-0 mb-0">
+                                            {{ \Carbon\Carbon::parse($book->created_at)->diffForHumans() }}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="$$" style="text-decoration: none; color:unset;" class="book-card-solo m-2 row ">
-                        <div class="col-12" style="width: 100%;">
-                            <img src="{{ asset('images/jioi.png') }}" class=" product-thumb"
-                                style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; "
-                                alt="" width="100%">
-                        </div>
-                        <div class="col-12 mt-2">
-                            <div class="">
-                                <h5 class="title-limit">Title of this book ihdw widhwi wkdjw</h5>
-                            </div>
-                            <div class="d-flex align-items-center " style="color:gray !important;">
-                                <div class="m-1 mt-0 mb-0">
-                                    25.3k views
-                                </div>
-                                .
-                                <div class="m-1 mt-0 mb-0">
-                                    2h ago
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
+                            </a>
+                        @endif
+                    @endforeach
                 </div>
             </div>
             <div style=" display:none;" class="other-class-content the-content-part-2 ">
                 <div class="container m-0 p-0 d-flex flex-wrap">
-                    <a style="text-decoration: none; color: unset;" class="book-card-solo m-2 row"
-                        href="@@">
-                        <div class="col-12" style="width: 100%;">
-                            <div style="height: 0px;">
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -2px; top: 40px; left: 40%; position: relative; filter: blur(3px);"
-                                    alt="" width="70%">
-                            </div>
-                            <div style="height: 0px;">
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -1px; top: 25px; left: 25%; position: relative; filter: blur(1px);"
-                                    alt="" width="80%">
-                            </div>
-                            <div>
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: 0; top: -60%; position: relative;"
-                                    alt="" width="100%">
-                            </div>
-                        </div>
-
-
-                        <div class="col-12 mt-2">
-                            <div class="">
-                                <h5 class="title-limit">Title of this book ihdw widhwi wkdjw</h5>
-                            </div>
-                            <div class="d-flex align-items-center" style="color: gray;">
-                                <div class="m-1 mt-0 mb-0">
-                                    25.3k views
+                    @foreach ($lists as $list)
+                        @php
+                            $var = $list->books->count();
+                            if ($var == 0) {
+                                $image = 'images/default book.jpg';
+                            } else {
+                                $image = $list->books[0]->url_cover;
+                            }
+                        @endphp
+                        <a style="text-decoration: none; color: unset;" class="book-card-solo m-2 row"
+                            href="{{ route('list.info', ['id' => $list->id]) }}">
+                            <div class="col-12" style="width: 100%;">
+                                <div style="height: 0px;">
+                                    <img src="{{ asset($image) }}" class="product-thumb"
+                                        style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -2px; top: 40px; left: 40%; position: relative; filter: blur(3px);"
+                                        alt="" width="70%">
                                 </div>
-                                .
-                                <div class="m-1 mt-0 mb-0">
-                                    2h ago
+                                <div style="height: 0px;">
+                                    <img src="{{ asset($image) }}" class="product-thumb"
+                                        style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -1px; top: 25px; left: 25%; position: relative; filter: blur(1px);"
+                                        alt="" width="80%">
+                                </div>
+                                <div>
+                                    <img src="{{ asset($image) }}" class="product-thumb"
+                                        style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: 0; top: -60%; position: relative;"
+                                        alt="" width="100%">
                                 </div>
                             </div>
-                        </div>
-                    </a>
-
-                    <a style="text-decoration: none; color: unset;" class="book-card-solo m-2 row"
-                        href="@@">
-                        <div class="col-12" style="width: 100%;">
-                            <div style="height: 0px;">
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -2px; top: 40px; left: 40%; position: relative; filter: blur(3px);"
-                                    alt="" width="70%">
-                            </div>
-                            <div style="height: 0px;">
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: -1px; top: 25px; left: 25%; position: relative; filter: blur(1px);"
-                                    alt="" width="80%">
-                            </div>
-                            <div>
-                                <img src="{{ asset('images/jioi.png') }}" class="product-thumb"
-                                    style="box-shadow: 1px 1px 0px 2px rgba(49, 49, 49, 0.2); overflow: hidden; border-radius:10px; z-index: 0; top: -60%; position: relative;"
-                                    alt="" width="100%">
-                            </div>
-                        </div>
 
 
-                        <div class="col-12 mt-2">
-                            <div class="">
-                                <h5 class="title-limit">Title of this book ihdw widhwi wkdjw</h5>
-                            </div>
-                            <div class="d-flex align-items-center" style="color: gray;">
-                                <div class="m-1 mt-0 mb-0">
-                                    25.3k views
+                            <div class="col-12 mt-2">
+                                <div class="">
+                                    <h5 class="title-limit">{{ $list->Title }}</h5>
                                 </div>
-                                .
-                                <div class="m-1 mt-0 mb-0">
-                                    2h ago
+                                <div class=" align-items-center" style="color: gray;">
+                                    <div class="m-1 mt-0 mb-0">
+                                        {{ \Carbon\Carbon::parse($list->created_at)->diffForHumans() }}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    @endforeach
+
 
                 </div>
             </div>
